@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"strings"
+	"text/template"
 
 	"github.com/spf13/afero"
 	"github.com/suzuki-shunsuke/slog-error/slogerr"
@@ -19,17 +20,30 @@ type Input struct {
 	Files          map[string]struct{}
 }
 
+type Templates struct {
+	Command *template.Template
+	File    *template.Template
+}
+
 func (c *Controller) Run(ctx context.Context, logger *slog.Logger, input *Input) error {
+	fns := txtFuncMap()
+	cmdTpl, err := template.New("_").Funcs(fns).Parse(commandTemplate)
+	if err != nil {
+		return fmt.Errorf("parse command template: %w", err)
+	}
+	tpls := &Templates{
+		Command: cmdTpl,
+	}
 	for file := range input.Files {
 		logger := logger.With("file", file)
-		if err := c.run(ctx, logger, file); err != nil {
+		if err := c.run(ctx, logger, tpls, file); err != nil {
 			return slogerr.With(err, "file", file) //nolint:wrapcheck
 		}
 	}
 	return nil
 }
 
-func (c *Controller) run(ctx context.Context, _ *slog.Logger, file string) error {
+func (c *Controller) run(ctx context.Context, _ *slog.Logger, tpls *Templates, file string) error {
 	b, err := afero.ReadFile(c.fs, file)
 	if err != nil {
 		return fmt.Errorf("read a file: %w", err)
@@ -41,7 +55,7 @@ func (c *Controller) run(ctx context.Context, _ *slog.Logger, file string) error
 	}
 	var contentBuilder strings.Builder
 	for _, block := range blocks {
-		s, err := c.renderBlock(ctx, block)
+		s, err := c.renderBlock(ctx, tpls, file, block)
 		if err != nil {
 			return err
 		}
@@ -72,6 +86,11 @@ type Block struct {
 
 type BlockInput struct {
 	Command *Command
+	File    *File
+}
+
+type File struct {
+	Path string
 }
 
 type Command struct {
@@ -80,9 +99,14 @@ type Command struct {
 }
 
 type TemplateInput struct {
+	Type string
+	// command
 	Command        string
 	Stdout         string
 	Stderr         string
 	CombinedOutput string
 	ExitCode       int
+	// file
+	Path    string
+	Content string
 }

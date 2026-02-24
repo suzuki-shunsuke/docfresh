@@ -4,32 +4,36 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"text/template"
 )
 
-func (c *Controller) renderBlock(ctx context.Context, block *Block) (string, error) {
+func (c *Controller) renderBlock(ctx context.Context, tpls *Templates, file string, block *Block) (string, error) {
 	if block.Type == "text" {
 		return block.Content, nil
 	}
-	tpl, err := template.New("_").Funcs(txtFuncMap()).Parse(commandTemplate)
-	if err != nil {
-		return "", fmt.Errorf("parse template: %w", err)
-	}
 	content := block.BeginComment
-	result, err := c.exec(ctx, block)
+	result, err := c.exec(ctx, file, block.Input)
 	if err != nil {
 		return "", fmt.Errorf("execute a command: %w", err)
 	}
-	buf := &bytes.Buffer{}
-	if err := tpl.Execute(buf, TemplateInput{
-		Command:        block.Input.Command.Command,
-		Stdout:         result.Stdout,
-		Stderr:         result.Stderr,
-		CombinedOutput: result.CombinedOutput,
-		ExitCode:       result.ExitCode,
-	}); err != nil {
-		return "", fmt.Errorf("execute a template: %w", err)
+	s, err := c.render(tpls, result)
+	if err != nil {
+		return "", fmt.Errorf("render template: %w", err)
 	}
-	content += "\n" + buf.String() + block.EndComment
+	content += "\n" + s + block.EndComment
 	return content, nil
+}
+
+func (c *Controller) render(tpls *Templates, result *TemplateInput) (string, error) {
+	switch result.Type {
+	case "local-file":
+		return result.Content, nil
+	case "command":
+		buf := &bytes.Buffer{}
+		if err := tpls.Command.Execute(buf, result); err != nil {
+			return "", fmt.Errorf("execute a template: %w", err)
+		}
+		return buf.String(), nil
+	default:
+		return "", fmt.Errorf("unknown type: %s", result.Type)
+	}
 }

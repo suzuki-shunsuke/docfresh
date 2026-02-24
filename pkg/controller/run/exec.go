@@ -3,19 +3,16 @@ package run
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"time"
-)
 
-type CommandResult struct {
-	Stdout         string
-	Stderr         string
-	CombinedOutput string
-	ExitCode       int
-}
+	"github.com/spf13/afero"
+)
 
 const waitDelay = 1000 * time.Hour
 
@@ -26,26 +23,54 @@ func setCancel(cmd *exec.Cmd) {
 	cmd.WaitDelay = waitDelay
 }
 
-func (c *Controller) exec(ctx context.Context, block *Block) (*CommandResult, error) {
-	shell := block.Input.Command.Shell
+func (c *Controller) execCommand(ctx context.Context, command *Command) (*TemplateInput, error) {
+	shell := command.Shell
 	if shell == nil {
 		shell = []string{"bash", "-c"}
 	}
-	cmd := exec.CommandContext(ctx, shell[0], append(shell[1:], block.Input.Command.Command)...) //nolint:gosec
+	cmd := exec.CommandContext(ctx, shell[0], append(shell[1:], command.Command)...) //nolint:gosec
 	stdout := &bytes.Buffer{}
 	stderr := &bytes.Buffer{}
 	combinedOutput := &bytes.Buffer{}
 	cmd.Stdout = io.MultiWriter(os.Stdout, stdout, combinedOutput)
 	cmd.Stderr = io.MultiWriter(os.Stderr, stderr, combinedOutput)
 	setCancel(cmd)
-	fmt.Fprintln(os.Stderr, "+", block.Input.Command.Command)
+	fmt.Fprintln(os.Stderr, "+", command.Command)
 	if err := cmd.Run(); err != nil {
 		return nil, fmt.Errorf("execute a command: %w", err)
 	}
-	return &CommandResult{
+	return &TemplateInput{
+		Type:           "command",
+		Command:        command.Command,
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
 		ExitCode:       cmd.ProcessState.ExitCode(),
+	}, nil
+}
+
+func (c *Controller) exec(ctx context.Context, file string, input *BlockInput) (*TemplateInput, error) {
+	if input.Command != nil {
+		return c.execCommand(ctx, input.Command)
+	}
+	if input.File != nil {
+		return c.readFile(file, input.File.Path)
+	}
+	return nil, errors.New("no command or file specified")
+}
+
+func (c *Controller) readFile(file, p string) (*TemplateInput, error) {
+	p = filepath.FromSlash(p)
+	if !filepath.IsAbs(p) {
+		p = filepath.Join(filepath.Dir(file), p)
+	}
+	b, err := afero.ReadFile(c.fs, p)
+	if err != nil {
+		return nil, fmt.Errorf("read file: %w", err)
+	}
+	return &TemplateInput{
+		Type:    "local-file",
+		Path:    p,
+		Content: string(b),
 	}, nil
 }

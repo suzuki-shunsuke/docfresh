@@ -130,4 +130,35 @@ command:
 ```
 
 - command.command: External Command
-- shell: The list of shell command executing command. By default, `["bash", "-c"]`
+- command.shell: The list of shell command executing command. By default, `["bash", "-c"]`
+- file.path: The relative path from the current file to the loaded file
+
+### Run Command
+
+```md
+<!-- docfresh begin
+command:
+  command: npm test
+-->
+```
+
+### Change Shell
+
+```md
+<!-- docfresh begin
+command:
+  command: echo hello
+  shell:
+    - zsh
+    - "-c"
+-->
+```
+
+### Read File
+
+```md
+<!-- docfresh begin
+file:
+  path: foo.md
+-->
+```
