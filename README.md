@@ -24,7 +24,7 @@ Other markup language isn't supported.
 
 ## Getting Started
 
-1. Install docfresh
+1. [Install docfresh](#install)
 
 ```sh
 : Check version
@@ -38,7 +38,7 @@ git clone https://github.com/suzuki-shunsuke/docfresh
 cd examples
 ```
 
-Please see date.md.
+Please see [date.md](examples/date.md).
 In this document, the result of `date` command is embedded.
 
 ```sh
@@ -50,6 +50,8 @@ Please run `docfresh run date.md` to update date.md.
 ```sh
 docfresh run date.md
 ```
+
+Then the datetime is updated.
 
 ## Motivation
 
@@ -75,6 +77,12 @@ Even if you delete a template file, the generated file may remain.
 Since the editable file and the generated file are separate, it is also harder to edit while previewing the final output.
 
 With docfresh, templates and generated files are unified, so these problems do not occur.
+
+## Install
+
+```sh
+go install github.com/szksh-lab/docfresh/cmd/docfresh@latest
+```
 
 ## Security
 
