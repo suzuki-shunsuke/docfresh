@@ -92,7 +92,7 @@ func TestParseFile(t *testing.T) { //nolint:funlen
 		},
 		{
 			name:    "unclosed begin comment",
-			content: "<!-- docfresh begin\ncommand:\n  command: echo hello\n-->", //nolint:dupword
+			content: "<!-- docfresh begin\ncommand:\n  command: echo hello\n", //nolint:dupword
 			wantErr: "unclosed <!-- docfresh begin comment: missing -->",
 		},
 	}
