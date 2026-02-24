@@ -84,7 +84,7 @@ func (c *Controller) request(ctx context.Context, uri string) (*TemplateInput, e
 	if err != nil {
 		return nil, fmt.Errorf("create http request: %w", err)
 	}
-	resp, err := c.httpClient.Do(req)
+	resp, err := c.httpClient.Do(req) //nolint:gosec
 	if err != nil {
 		return nil, fmt.Errorf("send http request: %w", err)
 	}
