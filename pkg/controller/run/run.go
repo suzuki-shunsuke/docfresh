@@ -1,18 +1,11 @@
 package run
 
 import (
-	"bytes"
 	"context"
 	_ "embed"
-	"fmt"
-	"io"
 	"log/slog"
 	"os"
-	"os/exec"
-	"text/template"
-	"time"
 
-	"github.com/Masterminds/sprig/v3"
 	"github.com/spf13/afero"
 	"github.com/suzuki-shunsuke/slog-error/slogerr"
 )
@@ -49,7 +42,7 @@ func (c *Controller) run(ctx context.Context, logger *slog.Logger, file string) 
 		return err
 	}
 	bs := string(b)
-	blocks, err := c.parseFile(string(b))
+	blocks, err := parseFile(string(b))
 	if err != nil {
 		return err
 	}
@@ -88,86 +81,10 @@ type Command struct {
 	Shell   []string
 }
 
-// parseFile parses a file and returns a list of blocks.
-func (c *Controller) parseFile(_ string) ([]*Block, error) {
-	return []*Block{
-		{
-			Type: "text",
-			Content: `# Hello
-
-`,
-		},
-		{
-			Type: "block",
-			BeginComment: `<!-- docfresh begin
-command:
-  command: echo "Hello"
--->`,
-			EndComment: `<!-- docfresh end -->`,
-			Input: &BlockInput{
-				Command: &Command{
-					Command: `echo "Hello"`,
-				},
-			},
-		},
-	}, nil
-}
-
 type TemplateInput struct {
 	Command        string
 	Stdout         string
 	Stderr         string
 	CombinedOutput string
 	ExitCode       int
-}
-
-func (c *Controller) renderBlock(ctx context.Context, block *Block) (string, error) {
-	if block.Type == "text" {
-		return block.Content, nil
-	}
-	fncs := sprig.TxtFuncMap()
-	delete(fncs, "env")
-	delete(fncs, "expandenv")
-	delete(fncs, "getHostByName")
-	tpl, err := template.New("_").Funcs(fncs).Parse(commandTemplate)
-	if err != nil {
-		return "", err
-	}
-	content := block.BeginComment
-	shell := block.Input.Command.Shell
-	if shell == nil {
-		shell = []string{"bash", "-c"}
-	}
-	cmd := exec.CommandContext(ctx, shell[0], append(shell[1:], block.Input.Command.Command)...)
-	stdout := &bytes.Buffer{}
-	stderr := &bytes.Buffer{}
-	combinedOutput := &bytes.Buffer{}
-	cmd.Stdout = io.MultiWriter(os.Stdout, stdout, combinedOutput)
-	cmd.Stderr = io.MultiWriter(os.Stderr, stderr, combinedOutput)
-	setCancel(cmd)
-	fmt.Fprintln(os.Stderr, "+", block.Input.Command.Command)
-	if err := cmd.Run(); err != nil {
-		return "", err
-	}
-	buf := &bytes.Buffer{}
-	if err := tpl.Execute(buf, TemplateInput{
-		Command:        block.Input.Command.Command,
-		Stdout:         stdout.String(),
-		Stderr:         stderr.String(),
-		CombinedOutput: combinedOutput.String(),
-		ExitCode:       cmd.ProcessState.ExitCode(),
-	}); err != nil {
-		return "", err
-	}
-	content += "\n" + buf.String() + block.EndComment
-	return content, nil
-}
-
-const waitDelay = 1000 * time.Hour
-
-func setCancel(cmd *exec.Cmd) {
-	cmd.Cancel = func() error {
-		return cmd.Process.Signal(os.Interrupt)
-	}
-	cmd.WaitDelay = waitDelay
 }
