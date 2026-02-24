@@ -14,7 +14,7 @@ const (
 )
 
 // parseFile parses a file and returns a list of blocks.
-func parseFile(content string) ([]*Block, error) {
+func parseFile(content string) ([]*Block, error) { //nolint:cyclop
 	var blocks []*Block
 	pos := 0
 	for pos < len(content) {

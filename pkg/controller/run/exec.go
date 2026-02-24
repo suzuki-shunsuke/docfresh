@@ -31,7 +31,7 @@ func (c *Controller) exec(ctx context.Context, block *Block) (*CommandResult, er
 	if shell == nil {
 		shell = []string{"bash", "-c"}
 	}
-	cmd := exec.CommandContext(ctx, shell[0], append(shell[1:], block.Input.Command.Command)...)
+	cmd := exec.CommandContext(ctx, shell[0], append(shell[1:], block.Input.Command.Command)...) //nolint:gosec
 	stdout := &bytes.Buffer{}
 	stderr := &bytes.Buffer{}
 	combinedOutput := &bytes.Buffer{}
@@ -40,7 +40,7 @@ func (c *Controller) exec(ctx context.Context, block *Block) (*CommandResult, er
 	setCancel(cmd)
 	fmt.Fprintln(os.Stderr, "+", block.Input.Command.Command)
 	if err := cmd.Run(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("execute a command: %w", err)
 	}
 	return &CommandResult{
 		Stdout:         stdout.String(),

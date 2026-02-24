@@ -3,17 +3,12 @@ package run
 import (
 	"context"
 	_ "embed"
+	"fmt"
 	"log/slog"
-	"os"
+	"strings"
 
 	"github.com/spf13/afero"
 	"github.com/suzuki-shunsuke/slog-error/slogerr"
-)
-
-// File and directory permissions for created configuration files
-const (
-	filePermission os.FileMode = 0o644 // Standard file permissions (rw-r--r--)
-	dirPermission  os.FileMode = 0o755 // Standard directory permissions (rwxr-xr-x)
 )
 
 //go:embed command_template.md
@@ -28,33 +23,38 @@ func (c *Controller) Run(ctx context.Context, logger *slog.Logger, input *Input)
 	for file := range input.Files {
 		logger := logger.With("file", file)
 		if err := c.run(ctx, logger, file); err != nil {
-			return slogerr.With(err, "file", file)
+			return slogerr.With(err, "file", file) //nolint:wrapcheck
 		}
 	}
 	return nil
 }
 
-func (c *Controller) run(ctx context.Context, logger *slog.Logger, file string) error {
+func (c *Controller) run(ctx context.Context, _ *slog.Logger, file string) error {
 	b, err := afero.ReadFile(c.fs, file)
 	if err != nil {
-		return err
+		return fmt.Errorf("read a file: %w", err)
 	}
 	bs := string(b)
 	blocks, err := parseFile(string(b))
 	if err != nil {
-		return err
+		return fmt.Errorf("parse a file: %w", err)
 	}
-	content := ""
+	var contentBuilder strings.Builder
 	for _, block := range blocks {
 		s, err := c.renderBlock(ctx, block)
 		if err != nil {
 			return err
 		}
-		content += s
+		contentBuilder.WriteString(s)
+	}
+	content := contentBuilder.String()
+	stat, err := c.fs.Stat(file)
+	if err != nil {
+		return fmt.Errorf("get file info: %w", err)
 	}
 	if content != bs {
-		if err := afero.WriteFile(c.fs, file, []byte(content), filePermission); err != nil {
-			return err
+		if err := afero.WriteFile(c.fs, file, []byte(content), stat.Mode()); err != nil {
+			return fmt.Errorf("update a file: %w", err)
 		}
 	}
 

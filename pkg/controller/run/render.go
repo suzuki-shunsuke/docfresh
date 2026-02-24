@@ -3,6 +3,7 @@ package run
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"text/template"
 )
 
@@ -12,12 +13,12 @@ func (c *Controller) renderBlock(ctx context.Context, block *Block) (string, err
 	}
 	tpl, err := template.New("_").Funcs(txtFuncMap()).Parse(commandTemplate)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("parse template: %w", err)
 	}
 	content := block.BeginComment
 	result, err := c.exec(ctx, block)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("execute a command: %w", err)
 	}
 	buf := &bytes.Buffer{}
 	if err := tpl.Execute(buf, TemplateInput{
@@ -27,7 +28,7 @@ func (c *Controller) renderBlock(ctx context.Context, block *Block) (string, err
 		CombinedOutput: result.CombinedOutput,
 		ExitCode:       result.ExitCode,
 	}); err != nil {
-		return "", err
+		return "", fmt.Errorf("execute a template: %w", err)
 	}
 	content += "\n" + buf.String() + block.EndComment
 	return content, nil

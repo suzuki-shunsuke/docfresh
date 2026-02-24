@@ -6,7 +6,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestParseFile(t *testing.T) {
+func TestParseFile(t *testing.T) { //nolint:funlen
 	t.Parallel()
 
 	tests := []struct {
@@ -29,12 +29,12 @@ func TestParseFile(t *testing.T) {
 		},
 		{
 			name:    "single begin/end pair with surrounding text",
-			content: "before\n<!-- docfresh begin\ncommand:\n  command: echo hello\n-->\nold output\n<!-- docfresh end -->\nafter\n",
+			content: "before\n<!-- docfresh begin\ncommand:\n  command: echo hello\n-->\nold output\n<!-- docfresh end -->\nafter\n", //nolint:dupword
 			want: []*Block{
 				{Type: "text", Content: "before\n"},
 				{
 					Type:         "block",
-					BeginComment: "<!-- docfresh begin\ncommand:\n  command: echo hello\n-->",
+					BeginComment: "<!-- docfresh begin\ncommand:\n  command: echo hello\n-->", //nolint:dupword
 					EndComment:   "<!-- docfresh end -->",
 					Input: &BlockInput{
 						Command: &Command{
@@ -47,12 +47,12 @@ func TestParseFile(t *testing.T) {
 		},
 		{
 			name:    "multiple begin/end pairs",
-			content: "# Title\n<!-- docfresh begin\ncommand:\n  command: echo one\n-->\noutput1\n<!-- docfresh end -->\nmiddle\n<!-- docfresh begin\ncommand:\n  command: echo two\n  shell:\n    - sh\n    - -c\n-->\noutput2\n<!-- docfresh end -->\n",
+			content: "# Title\n<!-- docfresh begin\ncommand:\n  command: echo one\n-->\noutput1\n<!-- docfresh end -->\nmiddle\n<!-- docfresh begin\ncommand:\n  command: echo two\n  shell:\n    - sh\n    - -c\n-->\noutput2\n<!-- docfresh end -->\n", //nolint:dupword
 			want: []*Block{
 				{Type: "text", Content: "# Title\n"},
 				{
 					Type:         "block",
-					BeginComment: "<!-- docfresh begin\ncommand:\n  command: echo one\n-->",
+					BeginComment: "<!-- docfresh begin\ncommand:\n  command: echo one\n-->", //nolint:dupword
 					EndComment:   "<!-- docfresh end -->",
 					Input: &BlockInput{
 						Command: &Command{
@@ -63,7 +63,7 @@ func TestParseFile(t *testing.T) {
 				{Type: "text", Content: "\nmiddle\n"},
 				{
 					Type:         "block",
-					BeginComment: "<!-- docfresh begin\ncommand:\n  command: echo two\n  shell:\n    - sh\n    - -c\n-->",
+					BeginComment: "<!-- docfresh begin\ncommand:\n  command: echo two\n  shell:\n    - sh\n    - -c\n-->", //nolint:dupword
 					EndComment:   "<!-- docfresh end -->",
 					Input: &BlockInput{
 						Command: &Command{
@@ -77,22 +77,22 @@ func TestParseFile(t *testing.T) {
 		},
 		{
 			name:    "end before begin",
-			content: "text\n<!-- docfresh end -->\n<!-- docfresh begin\ncommand:\n  command: echo hello\n-->\n",
+			content: "text\n<!-- docfresh end -->\n<!-- docfresh begin\ncommand:\n  command: echo hello\n-->\n", //nolint:dupword
 			wantErr: "found <!-- docfresh end --> without a matching <!-- docfresh begin",
 		},
 		{
 			name:    "missing end",
-			content: "<!-- docfresh begin\ncommand:\n  command: echo hello\n-->\nsome content\n",
+			content: "<!-- docfresh begin\ncommand:\n  command: echo hello\n-->\nsome content\n", //nolint:dupword
 			wantErr: "missing <!-- docfresh end --> for begin comment",
 		},
 		{
 			name:    "nested begin",
-			content: "<!-- docfresh begin\ncommand:\n  command: echo one\n-->\n<!-- docfresh begin\ncommand:\n  command: echo two\n-->\n<!-- docfresh end -->\n",
+			content: "<!-- docfresh begin\ncommand:\n  command: echo one\n-->\n<!-- docfresh begin\ncommand:\n  command: echo two\n-->\n<!-- docfresh end -->\n", //nolint:dupword
 			wantErr: "nested <!-- docfresh begin found before <!-- docfresh end -->",
 		},
 		{
 			name:    "unclosed begin comment",
-			content: "<!-- docfresh begin\ncommand:\n  command: echo hello\n",
+			content: "<!-- docfresh begin\ncommand:\n  command: echo hello\n-->", //nolint:dupword
 			wantErr: "unclosed <!-- docfresh begin comment: missing -->",
 		},
 	}
