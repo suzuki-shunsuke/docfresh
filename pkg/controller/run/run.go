@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	_ "embed"
+	"fmt"
 	"io"
 	"log/slog"
 	"os"
@@ -11,6 +12,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/Masterminds/sprig/v3"
 	"github.com/spf13/afero"
 	"github.com/suzuki-shunsuke/slog-error/slogerr"
 )
@@ -87,11 +89,13 @@ type Command struct {
 }
 
 // parseFile parses a file and returns a list of blocks.
-func (c *Controller) parseFile(content string) ([]*Block, error) {
+func (c *Controller) parseFile(_ string) ([]*Block, error) {
 	return []*Block{
 		{
-			Type:    "text",
-			Content: content,
+			Type: "text",
+			Content: `# Hello
+
+`,
 		},
 		{
 			Type: "block",
@@ -121,7 +125,11 @@ func (c *Controller) renderBlock(ctx context.Context, block *Block) (string, err
 	if block.Type == "text" {
 		return block.Content, nil
 	}
-	tpl, err := template.New("_").Parse(commandTemplate)
+	fncs := sprig.TxtFuncMap()
+	delete(fncs, "env")
+	delete(fncs, "expandenv")
+	delete(fncs, "getHostByName")
+	tpl, err := template.New("_").Funcs(fncs).Parse(commandTemplate)
 	if err != nil {
 		return "", err
 	}
@@ -137,6 +145,7 @@ func (c *Controller) renderBlock(ctx context.Context, block *Block) (string, err
 	cmd.Stdout = io.MultiWriter(os.Stdout, stdout, combinedOutput)
 	cmd.Stderr = io.MultiWriter(os.Stderr, stderr, combinedOutput)
 	setCancel(cmd)
+	fmt.Fprintln(os.Stderr, "+", block.Input.Command.Command)
 	if err := cmd.Run(); err != nil {
 		return "", err
 	}
@@ -150,7 +159,7 @@ func (c *Controller) renderBlock(ctx context.Context, block *Block) (string, err
 	}); err != nil {
 		return "", err
 	}
-	content += buf.String() + block.EndComment
+	content += "\n" + buf.String() + block.EndComment
 	return content, nil
 }
 

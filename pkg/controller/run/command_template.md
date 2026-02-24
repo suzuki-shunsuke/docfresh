@@ -3,5 +3,5 @@
 ```
 
 ```
-{{.CombinedOutput}}
+{{trimSuffix "\n" .CombinedOutput}}
 ```

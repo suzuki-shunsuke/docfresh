@@ -33,6 +33,7 @@ func NewRun(logger *slogutil.Logger, gFlags *Flags) *cli.Command {
 			&cli.StringArgs{
 				Name:        "document file",
 				Destination: &args.Files,
+				Max:         -1,
 			},
 		},
 	}
