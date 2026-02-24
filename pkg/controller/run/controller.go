@@ -2,19 +2,23 @@
 package run
 
 import (
+	"net/http"
+
 	"github.com/spf13/afero"
 )
 
 // Controller manages the initialization of docfresh configuration.
 // It provides methods to create configuration files with appropriate permissions.
 type Controller struct {
-	fs afero.Fs
+	fs         afero.Fs
+	httpClient *http.Client
 }
 
 // New creates a new Controller instance with the provided filesystem and environment.
 // The filesystem is used for all file operations, allowing for easy testing with mock filesystems.
 func New(fs afero.Fs) *Controller {
 	return &Controller{
-		fs: fs,
+		fs:         fs,
+		httpClient: http.DefaultClient, // TODO Change
 	}
 }

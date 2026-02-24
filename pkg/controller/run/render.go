@@ -25,7 +25,7 @@ func (c *Controller) renderBlock(ctx context.Context, tpls *Templates, file stri
 
 func (c *Controller) render(tpls *Templates, result *TemplateInput) (string, error) {
 	switch result.Type {
-	case "local-file":
+	case "local-file", "http":
 		return result.Content, nil
 	case "command":
 		buf := &bytes.Buffer{}

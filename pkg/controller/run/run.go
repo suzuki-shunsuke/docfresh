@@ -87,6 +87,11 @@ type Block struct {
 type BlockInput struct {
 	Command *Command
 	File    *File
+	HTTP    *HTTP
+}
+
+type HTTP struct {
+	URL string
 }
 
 type File struct {
@@ -109,4 +114,6 @@ type TemplateInput struct {
 	// file
 	Path    string
 	Content string
+	// http
+	URL string
 }
