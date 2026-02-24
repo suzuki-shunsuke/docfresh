@@ -1,0 +1,7 @@
+```sh
+{{.Command}}
+```
+
+```
+{{.CombinedOutput}}
+```
