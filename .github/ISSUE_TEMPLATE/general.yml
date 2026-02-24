@@ -1,7 +1,7 @@
 name: General
 description: Please use this template only when other templates don't meet your requirement
 labels:
-  - no-fit-template
+  - general
 body:
   - type: textarea
     id: what

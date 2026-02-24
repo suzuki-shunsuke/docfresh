@@ -34,21 +34,6 @@ body:
         Please see [the guide](https://github.com/suzuki-shunsuke/oss-contribution-guide#write-good-how-to-reproduce) too.
         docfresh.yaml should be not partial but complete configuration.
         Please remove unneeded configuration to reproduce the issue.
-      value: |
-        Configuration file `docfresh.yaml` (Please mask client ids):
-
-        ```yaml
-        ```
-
-        Environment variables:
-
-        ```
-        ```
-
-        Command:
-
-        ```sh
-        ```
     validations:
       required: true
   - type: textarea
