@@ -16,10 +16,8 @@ const (
 	dirPermission  os.FileMode = 0o755 // Standard directory permissions (rwxr-xr-x)
 )
 
-var (
-	//go:embed command_template.md
-	commandTemplate string
-)
+//go:embed command_template.md
+var commandTemplate string
 
 type Input struct {
 	ConfigFilePath string

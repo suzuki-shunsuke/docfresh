@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/szksh-lab/docfresh/pkg/cli"
 	"github.com/suzuki-shunsuke/urfave-cli-v3-util/urfave"
+	"github.com/szksh-lab/docfresh/pkg/cli"
 )
 
 var version = ""
