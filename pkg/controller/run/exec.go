@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -56,6 +57,9 @@ func (c *Controller) exec(ctx context.Context, file string, input *BlockInput) (
 	if input.File != nil {
 		return c.readFile(file, input.File.Path)
 	}
+	if input.HTTP != nil {
+		return c.request(ctx, input.HTTP.URL)
+	}
 	return nil, errors.New("no command or file specified")
 }
 
@@ -71,6 +75,30 @@ func (c *Controller) readFile(file, p string) (*TemplateInput, error) {
 	return &TemplateInput{
 		Type:    "local-file",
 		Path:    p,
+		Content: string(b),
+	}, nil
+}
+
+func (c *Controller) request(ctx context.Context, uri string) (*TemplateInput, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, uri, nil)
+	if err != nil {
+		return nil, fmt.Errorf("create http request: %w", err)
+	}
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("send http request: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("unexpected status code: %d", resp.StatusCode)
+	}
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, fmt.Errorf("read response body: %w", err)
+	}
+	return &TemplateInput{
+		Type:    "http",
+		URL:     uri,
 		Content: string(b),
 	}, nil
 }
