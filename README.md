@@ -131,7 +131,23 @@ command:
 
 - command.command: External Command
 - command.shell: The list of shell command executing command. By default, `["bash", "-c"]`
+- command.ignore_fail: Ignore command failure. By default, `false`
 - file.path: The relative path from the current file to the loaded file
+- http.url: The URL to fetch the content from
+- template.content: The content to be rendered by the template engine
+
+### Examples
+
+[Please see examples.](examples)
+
+### Template Engine
+
+docfresh uses Go's [text/template](https://pkg.go.dev/text/template) and [sprig](https://masterminds.github.io/sprig/).
+Note that the following sprig functions aren't available due to security concerns:
+
+- env
+- expandenv
+- getHostByName
 
 ### Run Command
 
@@ -151,6 +167,19 @@ command:
   shell:
     - zsh
     - "-c"
+-->
+```
+
+### Ignore Command Failure
+
+By default, `docfresh run` fails if any command fails.
+If `.command.ignore_fail` is set to `true`, the command failure will be ignored.
+
+```md
+<!-- docfresh begin
+command:
+  command: npm t
+  ignore_fail: true
 -->
 ```
 

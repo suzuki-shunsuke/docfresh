@@ -1,8 +1,3 @@
-# Hello
+# Examples
 
-<!-- docfresh begin
-file:
-  path: foo.md
--->
-This is read from foo.md
-<!-- docfresh end -->
+Files in this directory are examples of docfresh.
