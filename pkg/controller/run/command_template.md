@@ -1,5 +1,5 @@
 ```sh
-{{.Command}}
+{{trimSuffix "\n" .Command}}
 ```
 
 ```

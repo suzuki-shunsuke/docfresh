@@ -37,7 +37,7 @@ func (c *Controller) execCommand(ctx context.Context, command *Command) (*Templa
 	cmd.Stderr = io.MultiWriter(os.Stderr, stderr, combinedOutput)
 	setCancel(cmd)
 	fmt.Fprintln(os.Stderr, "+", command.Command)
-	if err := cmd.Run(); err != nil {
+	if err := cmd.Run(); err != nil && !command.IgnoreFail {
 		return nil, fmt.Errorf("execute a command: %w", err)
 	}
 	return &TemplateInput{
