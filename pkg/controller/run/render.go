@@ -21,6 +21,11 @@ func (c *Controller) renderBlock(ctx context.Context, tpls *Templates, file stri
 		return "", err
 	}
 	content := block.BeginComment
+	if block.Input.PreCommand != nil {
+		if _, err := c.execCommand(ctx, file, block.Input.PreCommand); err != nil {
+			return "", fmt.Errorf("execute pre_command: %w", err)
+		}
+	}
 	result, err := c.exec(ctx, file, block.Input)
 	if err != nil {
 		return "", fmt.Errorf("execute a command: %w", err)

@@ -87,10 +87,11 @@ type Block struct {
 }
 
 type BlockInput struct {
-	Command  *Command
-	File     *File
-	HTTP     *HTTP
-	Template *Template
+	PreCommand *Command  `yaml:"pre_command,omitempty"`
+	Command    *Command  `yaml:",omitempty"`
+	File       *File     `yaml:",omitempty"`
+	HTTP       *HTTP     `yaml:",omitempty"`
+	Template   *Template `yaml:",omitempty"`
 }
 
 type Template struct {
@@ -107,8 +108,8 @@ type File struct {
 
 type Command struct {
 	Command    string
-	Dir        string
-	Shell      []string
+	Dir        string `yaml:",omitempty"`
+	Shell      []string `yaml:",omitempty"`
 	IgnoreFail bool `yaml:"ignore_fail,omitempty"`
 }
 
