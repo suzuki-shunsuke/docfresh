@@ -144,7 +144,7 @@ command:
 - command.dir: The relative path from the current file to the directory where the command is executed. By default, the directory of the file.
 - command.shell: The list of shell command executing command. By default, `["bash", "-c"]`
 - command.ignore_fail: Ignore command failure. By default, `false`
-- pre_command: External Command exected before `command`. The command and output are outputed to the console but the result isn't affected to the document. This is used for setup and checking the requirement. The format is same with `command`
+- pre_command: External Command executed before `command`. The command and output are outputted to the console but the result isn't affected to the document. This is used for setup and checking the requirement. The format is same with `command`
 - file.path: The relative path from the current file to the loaded file
 - http.url: The URL to fetch the content from
 - template.content: The content to be rendered by the template engine
