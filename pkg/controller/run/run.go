@@ -108,9 +108,9 @@ type File struct {
 
 type Command struct {
 	Command    string
-	Dir        string `yaml:",omitempty"`
+	Dir        string   `yaml:",omitempty"`
 	Shell      []string `yaml:",omitempty"`
-	IgnoreFail bool `yaml:"ignore_fail,omitempty"`
+	IgnoreFail bool     `yaml:"ignore_fail,omitempty"`
 }
 
 type TemplateInput struct {
