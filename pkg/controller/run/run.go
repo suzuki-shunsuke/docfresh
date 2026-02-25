@@ -21,6 +21,7 @@ type Input struct {
 }
 
 type Templates struct {
+	Funcs   template.FuncMap
 	Command *template.Template
 	File    *template.Template
 }
@@ -33,6 +34,7 @@ func (c *Controller) Run(ctx context.Context, logger *slog.Logger, input *Input)
 	}
 	tpls := &Templates{
 		Command: cmdTpl,
+		Funcs:   fns,
 	}
 	for file := range input.Files {
 		logger := logger.With("file", file)
@@ -85,9 +87,14 @@ type Block struct {
 }
 
 type BlockInput struct {
-	Command *Command
-	File    *File
-	HTTP    *HTTP
+	Command  *Command
+	File     *File
+	HTTP     *HTTP
+	Template *Template
+}
+
+type Template struct {
+	Content string
 }
 
 type HTTP struct {

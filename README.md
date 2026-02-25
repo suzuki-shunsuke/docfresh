@@ -169,3 +169,24 @@ file:
 http:
   url: https://raw.githubusercontent.com/szksh-lab/docfresh/refs/heads/main/_typos.toml
 -->
+
+### Change Template
+
+```md
+<!-- docfresh begin
+command:
+  command: echo hello
+template:
+  content: |
+    Command:
+    {{.Command}}
+    
+    Stdout:
+  
+    {{.Stdout}}
+    
+    Stderr:
+    
+    {{.Stderr}}
+-->
+```
