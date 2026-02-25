@@ -14,13 +14,10 @@ Please don't use this in production.
 - Execute external commands and embed their output into document
 - Test external commands in document
 - Unify a template file and generated file, which improves the maintainability of document
+- Fetch document from local and remote files and embed them into document
 
 Note that docfresh is intended to update markdown files.
 Other markup language isn't supported.
-
-<!--
-- Fetch document from local and remote files and embed them into document
--->
 
 ## Getting Started
 
@@ -77,6 +74,27 @@ Even if you delete a template file, the generated file may remain.
 Since the editable file and the generated file are separate, it is also harder to edit while previewing the final output.
 
 With docfresh, templates and generated files are unified, so these problems do not occur.
+
+## Usecases
+
+### Embed the common contribution guide
+
+We maintain a lot of OSS projects and we maintain the common contribution guide at [suzuki-shunsuke/oss-contribution-guide](https://github.com/suzuki-shunsuke/oss-contribution-guide/blob/v0.1.0/docs/guide.md).
+Previously, we noted the link to the document in CONTRUBTING.md of each project, but probably many people didn't follow it.
+So now we embed the common guide to CONTRIBUTING.md of each project using docfresh.
+
+- People and AI don't need to follow the link
+  - They follow the guide more
+- People and AI can search the content using tools like grep
+
+https://github.com/suzuki-shunsuke/docfresh/blob/8df6bbf991279c8d8fafa99b5acc4b2ace3dc192/CONTRIBUTING.md?plain=1#L3-L6
+
+```md
+<!-- docfresh begin
+http:
+  url: https://raw.githubusercontent.com/suzuki-shunsuke/oss-contribution-guide/refs/tags/v0.1.0/docs/guide.md
+-->
+```
 
 ## Install
 
