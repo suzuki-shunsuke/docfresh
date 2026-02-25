@@ -45,7 +45,7 @@ func (c *Controller) Run(ctx context.Context, logger *slog.Logger, input *Input)
 	return nil
 }
 
-func (c *Controller) run(ctx context.Context, _ *slog.Logger, tpls *Templates, file string) error {
+func (c *Controller) run(ctx context.Context, logger *slog.Logger, tpls *Templates, file string) error {
 	b, err := afero.ReadFile(c.fs, file)
 	if err != nil {
 		return fmt.Errorf("read a file: %w", err)
@@ -57,7 +57,7 @@ func (c *Controller) run(ctx context.Context, _ *slog.Logger, tpls *Templates, f
 	}
 	var contentBuilder strings.Builder
 	for _, block := range blocks {
-		s, err := c.renderBlock(ctx, tpls, file, block)
+		s, err := c.renderBlock(ctx, logger, tpls, file, block)
 		if err != nil {
 			return err
 		}
@@ -87,11 +87,12 @@ type Block struct {
 }
 
 type BlockInput struct {
-	PreCommand *Command  `yaml:"pre_command,omitempty"`
-	Command    *Command  `yaml:",omitempty"`
-	File       *File     `yaml:",omitempty"`
-	HTTP       *HTTP     `yaml:",omitempty"`
-	Template   *Template `yaml:",omitempty"`
+	PreCommand  *Command  `yaml:"pre_command,omitempty"`
+	PostCommand *Command  `yaml:"post_command,omitempty"`
+	Command     *Command  `yaml:",omitempty"`
+	File        *File     `yaml:",omitempty"`
+	HTTP        *HTTP     `yaml:",omitempty"`
+	Template    *Template `yaml:",omitempty"`
 }
 
 type Template struct {
