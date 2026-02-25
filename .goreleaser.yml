@@ -27,7 +27,7 @@ builds:
 release:
   prerelease: "true"
   header: |
-    [Pull Requests](https://github.com/szksh-lab/docfresh/pulls?q=is%3Apr+milestone%3A{{.Tag}}) | [Issues](https://github.com/szksh-lab/docfresh/issues?q=is%3Aissue+milestone%3A{{.Tag}}) | https://github.com/szksh-lab/docfresh/compare/{{.PreviousTag}}...{{.Tag}}
+    [Pull Requests](https://github.com/suzuki-shunsuke/docfresh/pulls?q=is%3Apr+milestone%3A{{.Tag}}) | [Issues](https://github.com/suzuki-shunsuke/docfresh/issues?q=is%3Aissue+milestone%3A{{.Tag}}) | https://github.com/suzuki-shunsuke/docfresh/compare/{{.PreviousTag}}...{{.Tag}}
 
 sboms:
   - id: default
@@ -39,7 +39,7 @@ homebrew_casks:
       name: homebrew-docfresh
     # The project name and current git tag are used in the format string.
     commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
-    homepage: https://github.com/szksh-lab/docfresh
+    homepage: https://github.com/suzuki-shunsuke/docfresh
     description: Make document maintainable, reusable, and testable.
     license: MIT
     skip_upload: true

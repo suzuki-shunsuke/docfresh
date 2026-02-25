@@ -81,7 +81,7 @@ With docfresh, templates and generated files are unified, so these problems do n
 ## Install
 
 ```sh
-go install github.com/szksh-lab/docfresh/cmd/docfresh@latest
+go install github.com/suzuki-shunsuke/docfresh/cmd/docfresh@latest
 ```
 
 ## Security
@@ -198,7 +198,7 @@ file:
 ```md
 <!-- docfresh begin
 http:
-  url: https://raw.githubusercontent.com/szksh-lab/docfresh/refs/heads/main/_typos.toml
+  url: https://raw.githubusercontent.com/suzuki-shunsuke/docfresh/refs/heads/main/_typos.toml
 -->
 ```
 

@@ -11,8 +11,8 @@ import (
 
 // defaultConfig provides a default configuration template for docfresh.
 // This template can be used to create an initial configuration file.
-const defaultConfig = `# yaml-language-server: $schema=https://raw.githubusercontent.com/szksh-lab/docfresh/refs/heads/main/json-schema/docfresh.json
-# docfresh - https://github.com/szksh-lab/docfresh
+const defaultConfig = `# yaml-language-server: $schema=https://raw.githubusercontent.com/suzuki-shunsuke/docfresh/refs/heads/main/json-schema/docfresh.json
+# docfresh - https://github.com/suzuki-shunsuke/docfresh
 templates:
 `
 

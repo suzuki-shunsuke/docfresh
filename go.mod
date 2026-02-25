@@ -1,4 +1,4 @@
-module github.com/szksh-lab/docfresh
+module github.com/suzuki-shunsuke/docfresh
 
 go 1.26.0
 
