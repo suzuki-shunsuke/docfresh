@@ -89,13 +89,6 @@ So now we embed the common guide to CONTRIBUTING.md of each project using docfre
 
 https://github.com/suzuki-shunsuke/docfresh/blob/8df6bbf991279c8d8fafa99b5acc4b2ace3dc192/CONTRIBUTING.md?plain=1#L3-L6
 
-```md
-<!-- docfresh begin
-http:
-  url: https://raw.githubusercontent.com/suzuki-shunsuke/oss-contribution-guide/refs/tags/v0.1.0/docs/guide.md
--->
-```
-
 ## Install
 
 ```sh
