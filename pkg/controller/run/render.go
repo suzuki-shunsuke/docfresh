@@ -5,11 +5,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"strings"
 	"text/template"
+
+	"github.com/suzuki-shunsuke/slog-error/slogerr"
 )
 
-func (c *Controller) renderBlock(ctx context.Context, tpls *Templates, file string, block *Block) (string, error) {
+func (c *Controller) renderBlock(ctx context.Context, logger *slog.Logger, tpls *Templates, file string, block *Block) (gS string, gErr error) {
 	if block.Type == "text" {
 		return block.Content, nil
 	}
@@ -21,10 +24,19 @@ func (c *Controller) renderBlock(ctx context.Context, tpls *Templates, file stri
 		return "", err
 	}
 	content := block.BeginComment
-	if block.Input.PreCommand != nil {
-		if _, err := c.execCommand(ctx, file, block.Input.PreCommand); err != nil {
-			return "", fmt.Errorf("execute pre_command: %w", err)
-		}
+	if block.Input.PostCommand != nil {
+		defer func() {
+			if _, err := c.execCommand(ctx, file, block.Input.PostCommand); err != nil {
+				if gErr == nil {
+					gErr = fmt.Errorf("execute post_command: %w", err)
+					return
+				}
+				slogerr.WithError(logger, err).Error("execute post_command")
+			}
+		}()
+	}
+	if err := c.runPreCommand(ctx, file, block); err != nil {
+		return "", fmt.Errorf("execute pre_command: %w", err)
 	}
 	result, err := c.exec(ctx, file, block.Input)
 	if err != nil {
@@ -34,10 +46,24 @@ func (c *Controller) renderBlock(ctx context.Context, tpls *Templates, file stri
 	if err != nil {
 		return "", fmt.Errorf("render template: %w", err)
 	}
+	return appendEndComment(content, s, block.EndComment), nil
+}
+
+func appendEndComment(content, s, endComment string) string {
 	if strings.HasSuffix(s, "\n") {
-		return content + "\n" + s + block.EndComment, nil
+		return content + "\n" + s + endComment
 	}
-	return content + "\n" + s + "\n" + block.EndComment, nil
+	return content + "\n" + s + "\n" + endComment
+}
+
+func (c *Controller) runPreCommand(ctx context.Context, file string, block *Block) error {
+	if block.Input.PreCommand == nil {
+		return nil
+	}
+	if _, err := c.execCommand(ctx, file, block.Input.PreCommand); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (c *Controller) render(tpl *template.Template, result *TemplateInput) (string, error) {
