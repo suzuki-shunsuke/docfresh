@@ -1,4 +1,4 @@
-# template
+# command.shell + template
 
 <!-- docfresh begin
 command:
