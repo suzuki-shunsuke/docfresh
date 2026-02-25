@@ -2,13 +2,11 @@
 
 <!-- docfresh begin
 http:
-  # url: https://raw.githubusercontent.com/suzuki-shunsuke/oss-contribution-guide/refs/heads/main/docs/guide.md
-  url: https://raw.githubusercontent.com/suzuki-shunsuke/oss-contribution-guide/refs/heads/remove-link-from-template/docs/guide.md
+  url: https://raw.githubusercontent.com/suzuki-shunsuke/oss-contribution-guide/refs/tags/v0.1.0/docs/guide.md
 -->
 ## Use English
 
 Please use English in this project.
-For example, even if the project author is Japanese, you shouldn't use Japanese if English is used in the project.
 If you're not good at English, machine translator such as [DeepL](https://www.deepl.com/translator) would help you.
 
 ## Create an Issue before creating a Pull Request
