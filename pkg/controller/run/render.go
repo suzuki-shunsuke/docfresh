@@ -35,10 +35,8 @@ func (c *Controller) renderBlock(ctx context.Context, logger *slog.Logger, tpls 
 			}
 		}()
 	}
-	if block.Input.PreCommand != nil {
-		if _, err := c.execCommand(ctx, file, block.Input.PreCommand); err != nil {
-			return "", fmt.Errorf("execute pre_command: %w", err)
-		}
+	if err := c.runPreCommand(ctx, file, block); err != nil {
+		return "", fmt.Errorf("execute pre_command: %w", err)
 	}
 	result, err := c.exec(ctx, file, block.Input)
 	if err != nil {
@@ -48,10 +46,24 @@ func (c *Controller) renderBlock(ctx context.Context, logger *slog.Logger, tpls 
 	if err != nil {
 		return "", fmt.Errorf("render template: %w", err)
 	}
+	return appendEndComment(content, s, block.EndComment), nil
+}
+
+func appendEndComment(content, s, endComment string) string {
 	if strings.HasSuffix(s, "\n") {
-		return content + "\n" + s + block.EndComment, nil
+		return content + "\n" + s + endComment
 	}
-	return content + "\n" + s + "\n" + block.EndComment, nil
+	return content + "\n" + s + "\n" + endComment
+}
+
+func (c *Controller) runPreCommand(ctx context.Context, file string, block *Block) error {
+	if block.Input.PreCommand == nil {
+		return nil
+	}
+	if _, err := c.execCommand(ctx, file, block.Input.PreCommand); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (c *Controller) render(tpl *template.Template, result *TemplateInput) (string, error) {
