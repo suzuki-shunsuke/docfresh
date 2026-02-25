@@ -40,7 +40,7 @@ homebrew_casks:
     # The project name and current git tag are used in the format string.
     commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
     homepage: https://github.com/szksh-lab/docfresh
-    description: Create GitHub App User Access Token for secure local development
+    description: Make document maintainable, reusable, and testable.
     license: MIT
     skip_upload: true
     hooks:
@@ -51,9 +51,8 @@ homebrew_casks:
           end
 
 scoops:
-  -
-    description: |
-      Create GitHub App User Access Token for secure local development
+  - description: |
+      Make document maintainable, reusable, and testable.
     license: MIT
     skip_upload: true
     repository:
