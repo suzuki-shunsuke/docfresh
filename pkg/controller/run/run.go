@@ -107,6 +107,7 @@ type File struct {
 
 type Command struct {
 	Command    string
+	Dir        string
 	Shell      []string
 	IgnoreFail bool `yaml:"ignore_fail,omitempty"`
 }
@@ -115,6 +116,7 @@ type TemplateInput struct {
 	Type string
 	// command
 	Command        string
+	Dir            string
 	Stdout         string
 	Stderr         string
 	CombinedOutput string

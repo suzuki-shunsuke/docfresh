@@ -24,12 +24,23 @@ func setCancel(cmd *exec.Cmd) {
 	cmd.WaitDelay = waitDelay
 }
 
-func (c *Controller) execCommand(ctx context.Context, command *Command) (*TemplateInput, error) {
+func getCommandDir(file string, command *Command) string {
+	if command.Dir == "" {
+		return filepath.Dir(file)
+	}
+	if filepath.IsAbs(command.Dir) {
+		return command.Dir
+	}
+	return filepath.Join(filepath.Dir(file), command.Dir)
+}
+
+func (c *Controller) execCommand(ctx context.Context, file string, command *Command) (*TemplateInput, error) {
 	shell := command.Shell
 	if shell == nil {
 		shell = []string{"bash", "-c"}
 	}
 	cmd := exec.CommandContext(ctx, shell[0], append(shell[1:], command.Command)...) //nolint:gosec
+	cmd.Dir = getCommandDir(file, command)
 	stdout := &bytes.Buffer{}
 	stderr := &bytes.Buffer{}
 	combinedOutput := &bytes.Buffer{}
@@ -43,6 +54,7 @@ func (c *Controller) execCommand(ctx context.Context, command *Command) (*Templa
 	return &TemplateInput{
 		Type:           "command",
 		Command:        command.Command,
+		Dir:            command.Dir,
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
@@ -52,7 +64,7 @@ func (c *Controller) execCommand(ctx context.Context, command *Command) (*Templa
 
 func (c *Controller) exec(ctx context.Context, file string, input *BlockInput) (*TemplateInput, error) {
 	if input.Command != nil {
-		return c.execCommand(ctx, input.Command)
+		return c.execCommand(ctx, file, input.Command)
 	}
 	if input.File != nil {
 		return c.readFile(file, input.File.Path)
