@@ -154,6 +154,19 @@ command:
 -->
 ```
 
+### Ignore Command Failure
+
+By default, `docfresh run` fails if any command fails.
+If `.command.ignore_fail` is set to `true`, the command failure will be ignored.
+
+```md
+<!-- docfresh begin
+command:
+  command: npm t
+  ignore_fail: true
+-->
+```
+
 ### Read File
 
 ```md
