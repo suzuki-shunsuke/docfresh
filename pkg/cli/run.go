@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/afero"
 	"github.com/suzuki-shunsuke/slog-util/slogutil"
-	"github.com/szksh-lab/docfresh/pkg/controller/run"
+	"github.com/suzuki-shunsuke/docfresh/pkg/controller/run"
 	"github.com/urfave/cli/v3"
 )
 

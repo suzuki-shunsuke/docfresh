@@ -17,7 +17,7 @@ func Run(ctx context.Context, logger *slogutil.Logger, env *urfave.Env) error {
 	gFlags := &Flags{}
 	return urfave.Command(env, &cli.Command{ //nolint:wrapcheck
 		Name:  "docfresh",
-		Usage: "Make document maintainable, reusable, and testable. https://github.com/szksh-lab/docfresh",
+		Usage: "Make document maintainable, reusable, and testable. https://github.com/suzuki-shunsuke/docfresh",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:        "log-level",
