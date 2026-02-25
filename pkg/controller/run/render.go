@@ -55,7 +55,7 @@ func (c *Controller) getTemplate(tpls *Templates, block *Block) (*template.Templ
 		if block.Input.Command != nil {
 			return tpls.Command, nil
 		}
-		return nil, nil
+		return nil, nil //nolint:nilnil
 	}
 	tpl, err := template.New("_").Funcs(tpls.Funcs).Parse(block.Input.Template.Content)
 	if err != nil {
