@@ -130,6 +130,7 @@ command:
 ```
 
 - command.command: External Command
+- command.dir: The relative path from the current file to the directory where the command is executed. By default, the directory of the file.
 - command.shell: The list of shell command executing command. By default, `["bash", "-c"]`
 - command.ignore_fail: Ignore command failure. By default, `false`
 - file.path: The relative path from the current file to the loaded file
