@@ -69,7 +69,7 @@ func GetGHTKNEnabledFromEnv() (bool, error) {
 	}
 	b, err := strconv.ParseBool(s)
 	if err != nil {
-		return false, fmt.Errorf("parse the environment variable as a boolean")
+		return false, fmt.Errorf("parse the environment variable as a boolean: %w", err)
 	}
 	return b, nil
 }

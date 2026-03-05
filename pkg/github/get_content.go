@@ -14,7 +14,7 @@ func (c *Client) GetContent(ctx context.Context, owner, repo, path, ref string) 
 	}
 	file, _, _, err := c.repo.GetContents(ctx, owner, repo, path, opts)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("get a file content by GitHub API: %w", err)
 	}
 	s, err := file.GetContent()
 	if err != nil {

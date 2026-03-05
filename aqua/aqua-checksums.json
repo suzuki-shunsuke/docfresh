@@ -26,28 +26,28 @@
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/crate-ci/typos/v1.43.5/typos-v1.43.5-aarch64-apple-darwin.tar.gz",
-      "checksum": "0C3FBEF95090B0CD6D269A0D4A7FF4D665D5BD2B579179C6B856F7617B1FFC70",
+      "id": "github_release/github.com/crate-ci/typos/v1.44.0/typos-v1.44.0-aarch64-apple-darwin.tar.gz",
+      "checksum": "CA82D593351DBAC519A5C9FA832FC147B176D80100D00D08E855FCB46D43882D",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/crate-ci/typos/v1.43.5/typos-v1.43.5-aarch64-unknown-linux-musl.tar.gz",
-      "checksum": "15F2D2592312BABEA0EABB783E6879085F7AB3BD643AACF4D8290DD7C14C07D0",
+      "id": "github_release/github.com/crate-ci/typos/v1.44.0/typos-v1.44.0-aarch64-unknown-linux-musl.tar.gz",
+      "checksum": "132C20FC5E3C9BA540EC55A0A468DCB9C1504625A405DF1C237B10DD4F2EC433",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/crate-ci/typos/v1.43.5/typos-v1.43.5-x86_64-apple-darwin.tar.gz",
-      "checksum": "F675F59C17287923C59B61D63C59092821D32AC35D66BD5AD9C666AD5A702531",
+      "id": "github_release/github.com/crate-ci/typos/v1.44.0/typos-v1.44.0-x86_64-apple-darwin.tar.gz",
+      "checksum": "70E7CBFD9C0BAC3B27D096171413A8FFF989CC9F9227D3EF66694ED99FDC7B5C",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/crate-ci/typos/v1.43.5/typos-v1.43.5-x86_64-pc-windows-msvc.zip",
-      "checksum": "33BCD71D132FC97C791581996453F0438D985DCEC2A0EEEDC1107A450BCB42C8",
+      "id": "github_release/github.com/crate-ci/typos/v1.44.0/typos-v1.44.0-x86_64-pc-windows-msvc.zip",
+      "checksum": "AFD85C8F3C5C925EE7452389ACDF70B048D8C6EAE5E52A581E63A7D1B7655F17",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/crate-ci/typos/v1.43.5/typos-v1.43.5-x86_64-unknown-linux-musl.tar.gz",
-      "checksum": "7BB0734A80C68A2EF1D4D0E64C46D498A50FBDB0D5EFDDAC44E9804A687FEF03",
+      "id": "github_release/github.com/crate-ci/typos/v1.44.0/typos-v1.44.0-x86_64-unknown-linux-musl.tar.gz",
+      "checksum": "1B788B7D764E2F20FE089487428A3944ED218D1FB6FCD8EAC4230B5893A38779",
       "algorithm": "sha256"
     },
     {
@@ -81,28 +81,28 @@
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/goreleaser/goreleaser/v2.14.0/goreleaser_Darwin_all.tar.gz",
-      "checksum": "C0AADC388800AEB8CBE6BBEF6D7832C087ADB09BDCEA193795DFA14126A6377A",
+      "id": "github_release/github.com/goreleaser/goreleaser/v2.14.1/goreleaser_Darwin_all.tar.gz",
+      "checksum": "9F2E47F847B4F4177376FC6AA6914FBC7F673F59720076747E738B578C2E896E",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/goreleaser/goreleaser/v2.14.0/goreleaser_Linux_arm64.tar.gz",
-      "checksum": "1C0347661912E006259D4048549C9B4AF51770B6B386759EE2DF972CE87426FC",
+      "id": "github_release/github.com/goreleaser/goreleaser/v2.14.1/goreleaser_Linux_arm64.tar.gz",
+      "checksum": "A84D3B27F052C12AD5C8342D7CAF1450A7174A305730AED21D72DB09301E49A5",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/goreleaser/goreleaser/v2.14.0/goreleaser_Linux_x86_64.tar.gz",
-      "checksum": "95E3A3A2ADEACD1B8DD704743C71EEC8343DDE472D3EFE71101A62570C47CBBD",
+      "id": "github_release/github.com/goreleaser/goreleaser/v2.14.1/goreleaser_Linux_x86_64.tar.gz",
+      "checksum": "2DF975A7ACBFDEAF888D596CAB0024D48EC7FB7D747E1D08B90948B791F40A5F",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/goreleaser/goreleaser/v2.14.0/goreleaser_Windows_arm64.zip",
-      "checksum": "6BD45BD9B1964921D6F996952C5EB9A00EFEABDE42C3BE5DD601328232D10E0C",
+      "id": "github_release/github.com/goreleaser/goreleaser/v2.14.1/goreleaser_Windows_arm64.zip",
+      "checksum": "7DFCEF290F25FEC3D09F8A89A8CF4047C0D89889487DAB55C5DDECECE7FFDCB8",
       "algorithm": "sha256"
     },
     {
-      "id": "github_release/github.com/goreleaser/goreleaser/v2.14.0/goreleaser_Windows_x86_64.zip",
-      "checksum": "2CF253FA3A2B89FD2265032A1CD50CFBD7A6AE09223B909CBC21314454E14942",
+      "id": "github_release/github.com/goreleaser/goreleaser/v2.14.1/goreleaser_Windows_x86_64.zip",
+      "checksum": "D7A3D8BA795E97AB8C4F8003630D300DA164ADF21FDE5A4049440C20F15C3137",
       "algorithm": "sha256"
     },
     {

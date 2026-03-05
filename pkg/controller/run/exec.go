@@ -121,7 +121,7 @@ func (c *Controller) request(ctx context.Context, uri string) (*TemplateInput, e
 func (c *Controller) getGitHubContent(ctx context.Context, content *GitHubContent) (*TemplateInput, error) {
 	s, err := c.gh.GetContent(ctx, content.Owner, content.Repo, content.Path, content.Ref)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("get a file by GitHub Content API: %w", err)
 	}
 	return &TemplateInput{
 		Type:    "http",
