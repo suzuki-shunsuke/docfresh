@@ -93,6 +93,32 @@ Hello
 ```
 <!-- docfresh end -->
 
+## Embed the content of command.script
+
+<!-- docfresh begin
+command:
+  script: file/hello.sh
+template:
+  content: |
+    ```sh
+    {{trimSuffix "\n" .Content}}
+    ```
+
+    ```
+    {{trimSuffix "\n" .CombinedOutput}}
+    ```
+-->
+```sh
+#!/usr/bin/env bash
+
+echo Hello
+```
+
+```
+Hello
+```
+<!-- docfresh end -->
+
 ## ignore_fail
 
 By default, `docfresh run` fails if any command fails.

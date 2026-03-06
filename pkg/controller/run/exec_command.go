@@ -9,6 +9,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"time"
+
+	"github.com/spf13/afero"
 )
 
 const waitDelay = 1000 * time.Hour
@@ -42,12 +44,19 @@ func getShell(command *Command) []string {
 
 func (c *Controller) execCommand(ctx context.Context, file string, command *Command) (*TemplateInput, error) {
 	shell := getShell(command)
-	script := command.Script
-	if command.Command != "" {
-		script = command.Command
+	script := command.Command
+	var content string
+	dir := getCommandDir(file, command)
+	if command.Script != "" {
+		script = command.Script
+		b, err := afero.ReadFile(c.fs, filepath.Join(dir, command.Script))
+		if err != nil {
+			return nil, fmt.Errorf("read a command.script: %w", err)
+		}
+		content = string(b)
 	}
 	cmd := exec.CommandContext(ctx, shell[0], append(shell[1:], script)...) //nolint:gosec
-	cmd.Dir = getCommandDir(file, command)
+	cmd.Dir = dir
 	stdout := &bytes.Buffer{}
 	stderr := &bytes.Buffer{}
 	combinedOutput := &bytes.Buffer{}
@@ -75,5 +84,6 @@ func (c *Controller) execCommand(ctx context.Context, file string, command *Comm
 		Stderr:         stderr.String(),
 		CombinedOutput: combinedOutput.String(),
 		ExitCode:       cmd.ProcessState.ExitCode(),
+		Content:        content,
 	}, nil
 }
