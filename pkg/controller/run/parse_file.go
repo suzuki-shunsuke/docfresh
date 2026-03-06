@@ -198,6 +198,27 @@ func insideCodeBlock(pos int, ranges [][2]int) bool {
 	return false
 }
 
+// findClosingBackticks scans content starting at pos for a backtick run of exactly openLen.
+// Returns the end position (after the closing backticks) or -1 if not found.
+func findClosingBackticks(content string, pos, openLen int) int {
+	j := pos
+	for j < len(content) {
+		if content[j] != '`' {
+			j++
+			continue
+		}
+		closeLen := 0
+		for j+closeLen < len(content) && content[j+closeLen] == '`' {
+			closeLen++
+		}
+		if closeLen == openLen {
+			return j + closeLen
+		}
+		j += closeLen
+	}
+	return -1
+}
+
 // findInlineCodeRanges returns byte-offset ranges [start, end) for inline code spans,
 // skipping positions that are already inside fenced code block ranges.
 func findInlineCodeRanges(content string, fencedRanges [][2]int) [][2]int {
@@ -217,28 +238,11 @@ func findInlineCodeRanges(content string, fencedRanges [][2]int) [][2]int {
 		for i+openLen < len(content) && content[i+openLen] == '`' {
 			openLen++
 		}
-		start := i
-		// Search for a closing backtick sequence of exactly openLen.
-		j := i + openLen
-		found := false
-		for j < len(content) {
-			if content[j] != '`' {
-				j++
-				continue
-			}
-			closeLen := 0
-			for j+closeLen < len(content) && content[j+closeLen] == '`' {
-				closeLen++
-			}
-			if closeLen == openLen {
-				ranges = append(ranges, [2]int{start, j + closeLen})
-				i = j + closeLen
-				found = true
-				break
-			}
-			j += closeLen
-		}
-		if !found {
+		end := findClosingBackticks(content, i+openLen, openLen)
+		if end >= 0 {
+			ranges = append(ranges, [2]int{i, end})
+			i = end
+		} else {
 			// No closing sequence found; not a code span.
 			i += openLen
 		}
