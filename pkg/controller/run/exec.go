@@ -113,6 +113,10 @@ func (c *Controller) request(ctx context.Context, h *HTTP) (*TemplateInput, erro
 	if err != nil {
 		return nil, fmt.Errorf("create http request: %w", err)
 	}
+	if len(h.Header) > 0 {
+		req.Header = h.Header
+	}
+
 	resp, err := c.httpClient.Do(req) //nolint:gosec
 	if err != nil {
 		return nil, fmt.Errorf("send http request: %w", err)

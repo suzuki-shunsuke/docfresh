@@ -150,6 +150,7 @@ command:
 - file.path: The relative path from the current file to the loaded file
 - http.url: The URL to fetch the content from
 - http.timeout: Request timeout (seconds). By default, 5 seconds. If it's negative, there is no timeout.
+- http.header: Request header
 - template.content: The content to be rendered by the template engine
 - github_content.owner: GitHub repository owner
 - github_content.repo: GitHub repository name
@@ -246,6 +247,22 @@ file:
 <!-- docfresh begin
 http:
   url: https://raw.githubusercontent.com/suzuki-shunsuke/docfresh/refs/heads/main/_typos.toml
+  header:
+    Content-Type:
+      - application/json
+-->
+```
+
+You can set the timeout and header.
+
+```md
+<!-- docfresh begin
+http:
+  url: https://github.com/suzuki-shunsuke/pinact/raw/refs/heads/main/json-schema/pinact.json
+  timeout: -1 # Disable timeout. The default timeout is 5 seconds.
+  header:
+    Content-Type:
+      - application/json
 -->
 ```
 
