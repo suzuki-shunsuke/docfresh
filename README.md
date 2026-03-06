@@ -30,27 +30,47 @@ Other markup language isn't supported.
 docfresh -v
 ```
 
-2. Checkout the repository
+2. Create a document `date.md`
 
-```sh
-git clone https://github.com/suzuki-shunsuke/docfresh
-cd examples
+```md
+# Embed the output of date command into a document
+
+<!-- docfresh begin
+command:
+  command: date "+%Y-%m-%d %H:%M:%S"
+-->
+<!-- docfresh end -->
 ```
 
-Please see [date.md](examples/date.md).
-In this document, the result of `date` command is embedded.
-
-```sh
-cat date.md
-```
-
-Please run `docfresh run date.md` to update date.md.
+3. Run `docfresh run date.md` to update date.md.
 
 ```sh
 docfresh run date.md
 ```
 
-Then the datetime is updated.
+Then the date command and the result is embedded into the document.
+
+## Examples
+
+Please see not only rendered markdowns but also raw source code because HTML comments are hidden.
+
+> [!TIP]
+> This list is created by docfresh.
+
+<!-- docfresh begin
+command:
+  command: bash examples/file/create-index.sh
+template:
+  content: |
+    {{trimSuffix "\n" .Stdout}}
+-->
+- [Embed Command Result](examples/10_command.md)
+- [Embed Local Files](examples/20_file.md)
+- [Fetch Files Via HTTP](examples/30_http.md)
+- [Fetch files by GitHub Contents API](examples/40_github_content.md)
+- [Customize Template](examples/50-template.md)
+- [Test Command Results And Fetched File Contents](examples/60-test.md)
+<!-- docfresh end -->
 
 ## Motivation
 
@@ -100,8 +120,9 @@ go install github.com/suzuki-shunsuke/docfresh/cmd/docfresh@latest
 ## Security
 
 docfresh may execute arbitrary external commands defined in templates. Therefore, it is important to take appropriate security precautions.
-Running docfresh on untrusted templates can be dangerous. It is recommended to execute docfresh in an isolated environment such as a container. Secrets should not be provided unless absolutely necessary.
-Support for executing commands inside containers is also being considered for future releases.
+Running docfresh on untrusted templates can be dangerous.
+It is recommended to execute docfresh in an isolated environment such as a container.
+Secrets should not be provided unless absolutely necessary.
 
 ## Template Syntax
 
@@ -136,9 +157,6 @@ Support for parallel processing across multiple files may be added in the future
 <!-- docfresh begin
 command:
   command: npm test
-  shell:
-    - bash
-    - "-c"
 -->
 ```
 
@@ -159,11 +177,7 @@ command:
 - github_content.path: GitHub repository content path
 - github_content.ref: GitHub repository content ref. This is optional.
 
-### Examples
-
-[Please see examples.](examples)
-
-### Template Engine
+## Template Engine
 
 docfresh uses Go's [text/template](https://pkg.go.dev/text/template) and [sprig](https://masterminds.github.io/sprig/).
 Note that the following sprig functions aren't available due to security concerns:
@@ -172,7 +186,7 @@ Note that the following sprig functions aren't available due to security concern
 - expandenv
 - getHostByName
 
-#### Available Variables In Templates
+### Available Variables In Templates
 
 command:
 
@@ -186,171 +200,7 @@ http, file:
 
 - Content
 
-### Run Command
-
-```md
-<!-- docfresh begin
-command:
-  command: npm test
--->
-```
-
-### Change Shell
-
-```md
-<!-- docfresh begin
-command:
-  command: echo hello
-  shell:
-    - zsh
-    - "-c"
--->
-```
-
-### Ignore Command Failure
-
-By default, `docfresh run` fails if any command fails.
-If `.command.ignore_fail` is set to `true`, the command failure will be ignored.
-
-```md
-<!-- docfresh begin
-command:
-  command: npm t
-  ignore_fail: true
--->
-```
-
-### Pre-Command, Post-Command 
-
-```md
-<!-- docfresh begin
-pre_command:
-  command: npm ci
-command:
-  command: npm t
-  ignore_fail: true
-post_command:
-  command: rm -rf node_modules
--->
-```
-
-### Read File
-
-```md
-<!-- docfresh begin
-file:
-  path: foo.md
--->
-```
-
-### Fetch File via HTTP
-
-```md
-<!-- docfresh begin
-http:
-  url: https://raw.githubusercontent.com/suzuki-shunsuke/docfresh/refs/heads/main/_typos.toml
-  header:
-    Content-Type:
-      - application/json
--->
-```
-
-You can set the timeout and header.
-
-```md
-<!-- docfresh begin
-http:
-  url: https://github.com/suzuki-shunsuke/pinact/raw/refs/heads/main/json-schema/pinact.json
-  timeout: -1 # Disable timeout. The default timeout is 5 seconds.
-  header:
-    Content-Type:
-      - application/json
--->
-```
-
-### Change Template
-
-```md
-<!-- docfresh begin
-command:
-  command: echo hello
-template:
-  content: |
-    Command:
-    {{.Command}}
-    
-    Stdout:
-  
-    {{.Stdout}}
-    
-    Stderr:
-    
-    {{.Stderr}}
--->
-```
-
-### Fetch File by GitHub Content API
-
-When ref is not set, the content is fetched from the default branch.
-
-> [!WARNING]
-> GitHub caches the content.
-> So when a branch is specified, even if the branch is updated the old content may be fetched.
-> This is the problem of GitHub, not docfresh.
-> You can avoid the issue by specifying a tag or commit SHA and updating it continuously.
-
-```md
-<!-- docfresh begin
-github_content:
-  owner: suzuki-shunsuke
-  repo: docfresh
-  path: README.md
-  ref: main # ref is optional
--->
-```
-
-You can pass a GitHub access token via environment variables `DOCFRESH_GITHUB_TOKEN` or `GITHUB_TOKEN`.
-
-```sh
-export DOCFRESH_GITHUB_TOKEN=xxx
-```
-
-```sh
-export GITHUB_TOKEN=xxx
-```
-
-If you use [ghtkn](https://github.com/suzuki-shunsuke/ghtkn), you can pass an access token by ghtkn integration.
-
-```sh
-export DOCFRESH_GHTKN_ENABLED=true
-```
-
-### Read Files As Templates
-
-```
-Hello, {{.Vars.name}}
-```
-
-```md
-<!-- docfresh begin
-file:
-  path: file/template.md
-  template:
-    vars:
-      name: foo
--->
-```
-
-### Test
-
-```md
-<!-- docfresh begin
-command:
-  command: echo test
-  test: |
-    Stdout contains "test"
--->
-```
+## Test
 
 `test` is evaluated using [Expr](https://expr-lang.org/).
 Clear, precise error messages with position indicators to help debug expressions quickly.
@@ -366,6 +216,6 @@ literal not terminated (1:23)
 
 [About the language, please see the document of Expr.](https://expr-lang.org/docs/language-definition)
 
-#### Available Variables In Expressions
+### Available Variables In Expressions
 
 Available Variables are same with available variables in templates.
