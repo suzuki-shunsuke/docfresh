@@ -30,27 +30,48 @@ Other markup language isn't supported.
 docfresh -v
 ```
 
-2. Checkout the repository
+2. Create a document `date.md`
 
-```sh
-git clone https://github.com/suzuki-shunsuke/docfresh
-cd examples
+```md
+# Embed the output of date command into a document
+
+<!-- docfresh begin
+command:
+  command: date "+%Y-%m-%d %H:%M:%S"
+-->
+<!-- docfresh end -->
 ```
 
-Please see [date.md](examples/date.md).
-In this document, the result of `date` command is embedded.
-
-```sh
-cat date.md
-```
-
-Please run `docfresh run date.md` to update date.md.
+3. Run `docfresh run date.md` to update date.md.
 
 ```sh
 docfresh run date.md
 ```
 
 Then the datetime is updated.
+
+## Examples
+
+Please see not only rendered markdowns but also raw source code because HTML comments are hidden.
+
+> [!TIP]
+> This list is created by docfresh.
+
+<!-- docfresh begin
+command:
+  command: bash file/create-index.sh
+  dir: examples
+template:
+  content: |
+    {{trimSuffix "\n" .Stdout}}
+-->
+- [Embed Command Result](10_command.md)
+- [Embed Local Files](20_file.md)
+- [Fetch Files Via HTTP](30_http.md)
+- [Fetch files by GitHub Contents API](40_github_content.md)
+- [Customize Template](50-template.md)
+- [Test Command Results And Fetched File Contents](60-test.md)
+<!-- docfresh end -->
 
 ## Motivation
 
@@ -100,8 +121,9 @@ go install github.com/suzuki-shunsuke/docfresh/cmd/docfresh@latest
 ## Security
 
 docfresh may execute arbitrary external commands defined in templates. Therefore, it is important to take appropriate security precautions.
-Running docfresh on untrusted templates can be dangerous. It is recommended to execute docfresh in an isolated environment such as a container. Secrets should not be provided unless absolutely necessary.
-Support for executing commands inside containers is also being considered for future releases.
+Running docfresh on untrusted templates can be dangerous.
+It is recommended to execute docfresh in an isolated environment such as a container.
+Secrets should not be provided unless absolutely necessary.
 
 ## Template Syntax
 
@@ -156,30 +178,7 @@ command:
 - github_content.path: GitHub repository content path
 - github_content.ref: GitHub repository content ref. This is optional.
 
-### Examples
-
-Please see not only rendered markdowns but also raw source code because HTML comments are hidden.
-
-> [!TIP]
-> This list is created by docfresh.
-
-<!-- docfresh begin
-command:
-  command: bash file/create-index.sh
-  dir: examples
-template:
-  content: |
-    {{trimSuffix "\n" .Stdout}}
--->
-- [Embed Command Result](10_command.md)
-- [Embed Local Files](20_file.md)
-- [Fetch Files Via HTTP](30_http.md)
-- [Fetch files by GitHub Contents API](40_github_content.md)
-- [Customize Template](50-template.md)
-- [Test Command Results And Fetched File Contents](60-test.md)
-<!-- docfresh end -->
-
-### Template Engine
+## Template Engine
 
 docfresh uses Go's [text/template](https://pkg.go.dev/text/template) and [sprig](https://masterminds.github.io/sprig/).
 Note that the following sprig functions aren't available due to security concerns:
@@ -188,7 +187,7 @@ Note that the following sprig functions aren't available due to security concern
 - expandenv
 - getHostByName
 
-#### Available Variables In Templates
+### Available Variables In Templates
 
 command:
 
@@ -202,44 +201,7 @@ http, file:
 
 - Content
 
-### Fetch File by GitHub Content API
-
-```md
-<!-- docfresh begin
-github_content:
-  owner: suzuki-shunsuke
-  repo: docfresh
-  path: README.md
-  ref: main # ref is optional
--->
-```
-
-### Read Files As Templates
-
-```
-Hello, {{.Vars.name}}
-```
-
-```md
-<!-- docfresh begin
-file:
-  path: file/template.md
-  template:
-    vars:
-      name: foo
--->
-```
-
-### Test
-
-```md
-<!-- docfresh begin
-command:
-  command: echo test
-  test: |
-    Stdout contains "test"
--->
-```
+## Test
 
 `test` is evaluated using [Expr](https://expr-lang.org/).
 Clear, precise error messages with position indicators to help debug expressions quickly.
@@ -255,6 +217,6 @@ literal not terminated (1:23)
 
 [About the language, please see the document of Expr.](https://expr-lang.org/docs/language-definition)
 
-#### Available Variables In Expressions
+### Available Variables In Expressions
 
 Available Variables are same with available variables in templates.
