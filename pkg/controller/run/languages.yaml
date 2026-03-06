@@ -1,0 +1,25 @@
+go:
+  shell:
+    - go
+    - run
+  extensions:
+    - .go
+js:
+  shell:
+    - node
+  extensions:
+    - .js
+py:
+  shell:
+    - python3
+  extensions:
+    - .py
+sh:
+  shell:
+    - bash
+  extensions:
+    - .sh
+    - .bash
+ts:
+  extensions:
+    - .ts

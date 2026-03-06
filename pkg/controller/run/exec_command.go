@@ -3,6 +3,7 @@ package run
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"os"
@@ -32,23 +33,41 @@ func getCommandDir(file string, command *Command) string {
 	return filepath.Join(filepath.Dir(file), command.Dir)
 }
 
-func getShell(command *Command) []string {
+func getShell(command *Command, langs map[string]*Language) ([]string, error) {
 	if len(command.Shell) > 0 {
-		return command.Shell
+		return command.Shell, nil
 	}
-	if command.Script != "" {
-		return []string{"bash"}
+	if command.Script == "" {
+		return []string{"bash", "-c"}, nil
 	}
-	return []string{"bash", "-c"}
+	if !command.EmbedScript {
+		return []string{"bash"}, nil
+	}
+	ext := filepath.Ext(command.Script)
+	sl, ok := langs[ext]
+	if ok && sl.Shell != nil {
+		return sl.Shell, nil
+	}
+	return nil, errors.New("shell is required")
 }
 
 func (c *Controller) execCommand(ctx context.Context, file string, command *Command) (*TemplateInput, error) {
-	shell := getShell(command)
+	shell, err := getShell(command, c.langs)
+	if err != nil {
+		return nil, fmt.Errorf("get command.shell: %w", err)
+	}
 	script := command.Command
 	var content string
 	dir := getCommandDir(file, command)
+	scriptLanguage := command.ScriptLanguage
 	if command.Script != "" {
 		script = command.Script
+		if scriptLanguage == "" {
+			sl, ok := c.langs[filepath.Ext(command.Script)]
+			if ok {
+				scriptLanguage = sl.Language
+			}
+		}
 		b, err := afero.ReadFile(c.fs, filepath.Join(dir, command.Script))
 		if err != nil {
 			return nil, fmt.Errorf("read a command.script: %w", err)
@@ -79,6 +98,8 @@ func (c *Controller) execCommand(ctx context.Context, file string, command *Comm
 		Shell:          shell,
 		Command:        command.Command,
 		Script:         command.Script,
+		ScriptLanguage: scriptLanguage,
+		EmbedScript:    command.EmbedScript,
 		Dir:            command.Dir,
 		Stdout:         stdout.String(),
 		Stderr:         stderr.String(),

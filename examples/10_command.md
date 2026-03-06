@@ -78,13 +78,15 @@ hello
 ## command.script
 
 Instead of `command.command`, you can specify an external script by `command.script`.
-If `command.script` is set, the default `command.shell` is `bash`.
+
+`shell` is automatically detected in case of some popular languages such as Go and Python.
+If it can't be automatically detected, `shell` should be specified explicitly.
 
 <!-- docfresh begin
 command:
   script: file/hello.sh
 -->
-```
+```sh
 bash file/hello.sh
 ```
 
@@ -93,11 +95,15 @@ Hello
 ```
 <!-- docfresh end -->
 
-## Embed the content of command.script
+### Embed the content of command.script
+
+If `command.embed_script` is true, the script content is embedded.
+`script_language` and `shell` are automatically detected in case of some popular languages such as Go and Python.
 
 <!-- docfresh begin
 command:
   script: file/hello.sh
+  embed_script: true
 template:
   content: |
     ```sh
@@ -116,6 +122,50 @@ echo Hello
 
 ```
 Hello
+```
+<!-- docfresh end -->
+
+### Automatic detection of script languages by file extensions
+
+`script_language` and `shell` are automatically detected in case of some popular languages such as Go and Python.
+
+[languages.yaml](../pkg/controller/run/languages.yaml)
+
+<!-- docfresh begin
+file:
+  path: ../pkg/controller/run/languages.yaml
+template:
+  content: |
+    ```yaml
+    {{trimSuffix "\n" .Content}}
+    ```
+-->
+```yaml
+go:
+  shell:
+    - go
+    - run
+  extensions:
+    - .go
+js:
+  shell:
+    - node
+  extensions:
+    - .js
+py:
+  shell:
+    - python3
+  extensions:
+    - .py
+sh:
+  shell:
+    - bash
+  extensions:
+    - .sh
+    - .bash
+ts:
+  extensions:
+    - .ts
 ```
 <!-- docfresh end -->
 

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"path/filepath"
 	"strings"
 	"text/template"
 
@@ -159,13 +160,26 @@ type File struct {
 }
 
 type Command struct {
-	Command    string
-	Script     string
-	Dir        string   `yaml:",omitempty"`
-	Shell      []string `yaml:",omitempty"`
-	IgnoreFail bool     `yaml:"ignore_fail,omitempty"`
-	Test       string
-	Envs       map[string]string
+	Command        string
+	Script         string
+	Dir            string `yaml:",omitempty"`
+	Test           string
+	ScriptLanguage string   `yaml:"script_language,omitempty"`
+	Shell          []string `yaml:",omitempty"`
+	Envs           map[string]string
+	IgnoreFail     bool `yaml:"ignore_fail,omitempty"`
+	EmbedScript    bool `yaml:"embed_script,omitempty"`
+}
+
+func (c *Command) GetScriptLanguage() string {
+	if c.ScriptLanguage != "" {
+		return c.ScriptLanguage
+	}
+	switch ext := filepath.Ext(c.Script); ext {
+	case "py", "sh", "js", "hcl", "go":
+		return ext
+	}
+	return ""
 }
 
 type TemplateInput struct {
@@ -178,6 +192,7 @@ type TemplateInput struct {
 	Stdout         string
 	Stderr         string
 	CombinedOutput string
+	ScriptLanguage string
 	ExitCode       int
 	// file
 	Path    string
@@ -191,4 +206,6 @@ type TemplateInput struct {
 	Ref   string
 	// template variables
 	Vars map[string]any
+	//
+	EmbedScript bool
 }
