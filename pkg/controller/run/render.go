@@ -64,36 +64,40 @@ func appendEndComment(content, s, endComment string) string {
 func render(tpl *template.Template, result *TemplateInput, templateData *TemplateData) (string, error) {
 	switch result.Type {
 	case "local-file", "http", "github-content":
-		if templateData == nil {
-			if tpl == nil {
-				if !result.UseFencedCodeBlockForOutput {
-					return result.Content, nil
-				}
-				if !strings.HasSuffix(result.Content, "\n") {
-					result.Content += "\n"
-				}
-				return "```" + result.ScriptLanguage + "\n" + result.Content + "```", nil
-			}
-			return execTpl(tpl, result)
-		}
-		fns := txtFuncMap()
-		contentTpl, err := template.New("_").Funcs(fns).Parse(result.Content)
-		if err != nil {
-			return "", fmt.Errorf("parse command template: %w", err)
-		}
-		result.Vars = templateData.Vars
-		content, err := execTpl(contentTpl, result)
-		if err != nil {
-			return "", err
-		}
-		if contentTpl == nil {
-			return content, nil
-		}
-		result.Content = content
-		return execTpl(contentTpl, result)
+		return renderFile(tpl, result, templateData)
 	case "command":
 		return execTpl(tpl, result)
 	default:
 		return "", fmt.Errorf("unknown type: %s", result.Type)
 	}
+}
+
+func renderFile(tpl *template.Template, result *TemplateInput, templateData *TemplateData) (string, error) {
+	if templateData == nil {
+		if tpl != nil {
+			return execTpl(tpl, result)
+		}
+		if !result.UseFencedCodeBlockForOutput {
+			return result.Content, nil
+		}
+		if !strings.HasSuffix(result.Content, "\n") {
+			result.Content += "\n"
+		}
+		return "```" + result.ScriptLanguage + "\n" + result.Content + "```", nil
+	}
+	fns := txtFuncMap()
+	contentTpl, err := template.New("_").Funcs(fns).Parse(result.Content)
+	if err != nil {
+		return "", fmt.Errorf("parse command template: %w", err)
+	}
+	result.Vars = templateData.Vars
+	content, err := execTpl(contentTpl, result)
+	if err != nil {
+		return "", err
+	}
+	if contentTpl == nil {
+		return content, nil
+	}
+	result.Content = content
+	return execTpl(contentTpl, result)
 }

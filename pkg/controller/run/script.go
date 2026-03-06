@@ -2,6 +2,7 @@ package run
 
 import (
 	_ "embed"
+	"fmt"
 
 	"github.com/goccy/go-yaml"
 )
@@ -22,7 +23,7 @@ type Language struct {
 func defaultScriptLanguages() (map[string]*Language, error) {
 	langs := map[string]*ScriptLanguage{}
 	if err := yaml.Unmarshal(languagesYAML, &langs); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("unmrshal languages.yaml: %w", err)
 	}
 	ret := make(map[string]*Language, len(langs))
 	for langName, lang := range langs {
