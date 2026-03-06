@@ -338,9 +338,9 @@ Clear, precise error messages with position indicators to help debug expressions
 + echo hello
 hello
 [ERROR] compile an expression
-unexpected token Identifier("conains") (1:8)
- | Stdout conains "helo"
- | .......^exit status 1
+literal not terminated (1:23)
+ | Stdout contains "hello
+ | ......................^+ echo post
 ```
 
 [About the language, please see the document of Expr.](https://expr-lang.org/docs/language-definition)
