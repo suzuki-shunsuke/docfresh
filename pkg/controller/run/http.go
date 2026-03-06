@@ -50,11 +50,20 @@ func (c *Controller) request(ctx context.Context, h *HTTP) (*TemplateInput, erro
 		}
 	}
 
-	return &TemplateInput{
+	content := string(b)
+	result := &TemplateInput{
 		Type:           "http",
 		URL:            h.URL,
 		Content:        string(b),
 		ScriptLanguage: sl,
 		Timeout:        h.Timeout,
-	}, nil
+		Vars:           h.Template.GetVars(),
+	}
+	if h.Template != nil {
+		if err := renderTemplate(content, result); err != nil {
+			return nil, err
+		}
+	}
+
+	return result, nil
 }
