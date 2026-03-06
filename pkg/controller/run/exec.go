@@ -101,6 +101,14 @@ func (c *Controller) readFile(file string, f *File) (*TemplateInput, error) {
 }
 
 func (c *Controller) request(ctx context.Context, h *HTTP) (*TemplateInput, error) {
+	if h.Timeout == 0 {
+		h.Timeout = 5
+	}
+	if h.Timeout > 0 {
+		requestCtx, cancel := context.WithTimeout(ctx, time.Duration(h.Timeout)*time.Second)
+		defer cancel()
+		ctx = requestCtx
+	}
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, h.URL, nil)
 	if err != nil {
 		return nil, fmt.Errorf("create http request: %w", err)
@@ -121,6 +129,7 @@ func (c *Controller) request(ctx context.Context, h *HTTP) (*TemplateInput, erro
 		Type:    "http",
 		URL:     h.URL,
 		Content: string(b),
+		Timeout: h.Timeout,
 	}, nil
 }
 

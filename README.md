@@ -149,6 +149,7 @@ command:
 - post_command: External Command executed after `command`. If it fails, docfresh fails. The command and output are outputted to the console but the result isn't affected to the document. This is used for testing the command result and cleaning up. The format is same with `command`. `post_command` is run even if `pre_command` and `command` fail.
 - file.path: The relative path from the current file to the loaded file
 - http.url: The URL to fetch the content from
+- http.timeout: Request timeout (seconds). By default, 5 seconds. If it's negative, there is no timeout.
 - template.content: The content to be rendered by the template engine
 - github_content.owner: GitHub repository owner
 - github_content.repo: GitHub repository name

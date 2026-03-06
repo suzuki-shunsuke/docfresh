@@ -146,6 +146,7 @@ type HTTP struct {
 	URL          string
 	TemplateData *TemplateData `yaml:"template"`
 	Test         string
+	Timeout      int
 }
 
 type File struct {
@@ -176,7 +177,8 @@ type TemplateInput struct {
 	Path    string
 	Content string
 	// http
-	URL string
+	URL     string
+	Timeout int
 	// github content
 	Owner string
 	Repo  string
