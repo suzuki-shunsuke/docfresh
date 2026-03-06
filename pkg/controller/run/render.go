@@ -29,12 +29,25 @@ func (c *Controller) renderBlock(ctx context.Context, logger *slog.Logger, tpls 
 	content := block.BeginComment
 	if block.Input.PostCommand != nil {
 		defer func() {
-			if _, err := c.execCommand(ctx, file, block.Input.PostCommand); err != nil {
+			result, err := c.execCommand(ctx, file, block.Input.PostCommand)
+			if err != nil {
 				if gErr == nil {
 					gErr = fmt.Errorf("execute post_command: %w", err)
 					return
 				}
 				slogerr.WithError(logger, err).Error("execute post_command")
+				return
+			}
+			if block.Input.PostCommand.Test == "" {
+				return
+			}
+			if err := testResult(c.stderr, block.Input.PostCommand.Test, result); err != nil {
+				if gErr == nil {
+					gErr = fmt.Errorf("test the result of post_command: %w", err)
+					return
+				}
+				slogerr.WithError(logger, err).Error("test the result of post_command")
+				return
 			}
 		}()
 	}
@@ -91,8 +104,14 @@ func (c *Controller) runPreCommand(ctx context.Context, file string, block *Bloc
 	if block.Input.PreCommand == nil {
 		return nil
 	}
-	if _, err := c.execCommand(ctx, file, block.Input.PreCommand); err != nil {
+	result, err := c.execCommand(ctx, file, block.Input.PreCommand)
+	if err != nil {
 		return err
+	}
+	if block.Input.PreCommand.Test != "" {
+		if err := testResult(c.stderr, block.Input.PreCommand.Test, result); err != nil {
+			return fmt.Errorf("test the result of pre_command: %w", err)
+		}
 	}
 	return nil
 }
