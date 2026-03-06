@@ -136,9 +136,6 @@ Support for parallel processing across multiple files may be added in the future
 <!-- docfresh begin
 command:
   command: npm test
-  shell:
-    - bash
-    - "-c"
 -->
 ```
 
@@ -161,7 +158,20 @@ command:
 
 ### Examples
 
-[Please see examples.](examples)
+Please see not only rendered markdowns but also raw source code because HTML comments are hidden.
+
+> [!TIP]
+> This list is created by docfresh.
+
+<!-- docfresh begin
+command:
+  command: bash file/create-index.sh
+  dir: examples
+template:
+  content: |
+    {{trimSuffix "\n" .Stdout}}
+-->
+<!-- docfresh end -->
 
 ### Template Engine
 
@@ -186,118 +196,7 @@ http, file:
 
 - Content
 
-### Run Command
-
-```md
-<!-- docfresh begin
-command:
-  command: npm test
--->
-```
-
-### Change Shell
-
-```md
-<!-- docfresh begin
-command:
-  command: echo hello
-  shell:
-    - zsh
-    - "-c"
--->
-```
-
-### Ignore Command Failure
-
-By default, `docfresh run` fails if any command fails.
-If `.command.ignore_fail` is set to `true`, the command failure will be ignored.
-
-```md
-<!-- docfresh begin
-command:
-  command: npm t
-  ignore_fail: true
--->
-```
-
-### Pre-Command, Post-Command 
-
-```md
-<!-- docfresh begin
-pre_command:
-  command: npm ci
-command:
-  command: npm t
-  ignore_fail: true
-post_command:
-  command: rm -rf node_modules
--->
-```
-
-### Read File
-
-```md
-<!-- docfresh begin
-file:
-  path: foo.md
--->
-```
-
-### Fetch File via HTTP
-
-```md
-<!-- docfresh begin
-http:
-  url: https://raw.githubusercontent.com/suzuki-shunsuke/docfresh/refs/heads/main/_typos.toml
-  header:
-    Content-Type:
-      - application/json
--->
-```
-
-You can set the timeout and header.
-
-```md
-<!-- docfresh begin
-http:
-  url: https://github.com/suzuki-shunsuke/pinact/raw/refs/heads/main/json-schema/pinact.json
-  timeout: -1 # Disable timeout. The default timeout is 5 seconds.
-  header:
-    Content-Type:
-      - application/json
--->
-```
-
-### Change Template
-
-```md
-<!-- docfresh begin
-command:
-  command: echo hello
-template:
-  content: |
-    Command:
-    {{.Command}}
-    
-    Stdout:
-  
-    {{.Stdout}}
-    
-    Stderr:
-    
-    {{.Stderr}}
--->
-```
-
 ### Fetch File by GitHub Content API
-
-When ref is not set, the content is fetched from the default branch.
-
-> [!WARNING]
-> GitHub caches the content.
-> So when a branch is specified, even if the branch is updated the old content may be fetched.
-> This is the problem of GitHub, not docfresh.
-> You can avoid the issue by specifying a tag or commit SHA and updating it continuously.
 
 ```md
 <!-- docfresh begin
@@ -307,22 +206,6 @@ github_content:
   path: README.md
   ref: main # ref is optional
 -->
-```
-
-You can pass a GitHub access token via environment variables `DOCFRESH_GITHUB_TOKEN` or `GITHUB_TOKEN`.
-
-```sh
-export DOCFRESH_GITHUB_TOKEN=xxx
-```
-
-```sh
-export GITHUB_TOKEN=xxx
-```
-
-If you use [ghtkn](https://github.com/suzuki-shunsuke/ghtkn), you can pass an access token by ghtkn integration.
-
-```sh
-export DOCFRESH_GHTKN_ENABLED=true
 ```
 
 ### Read Files As Templates

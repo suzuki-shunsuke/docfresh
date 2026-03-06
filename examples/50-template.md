@@ -1,29 +1,24 @@
-# command.shell & template
-
-## command.shell & template.content
+# Customize Template
 
 <!-- docfresh begin
 command:
-  command: console.log("hello")
-  shell:
-    - node
-    - "-e"
+  command: echo Hello
 template:
   content: |
-    ```js
-    {{.Command}}
+    ```console
+    $ {{.Command}}
     ```
     
     ```
     {{trimSuffix "\n" .CombinedOutput}}
     ```
 -->
-```js
-console.log("hello")
+```console
+$ echo Hello
 ```
 
 ```
-hello
+Hello
 ```
 <!-- docfresh end -->
 
@@ -39,4 +34,16 @@ template:
 $ echo "read template file"
 read template file
 ```
+<!-- docfresh end -->
+
+## template variables
+
+<!-- docfresh begin
+file:
+  path: file/template.md
+  template:
+    vars:
+      name: foo
+-->
+Hello, foo
 <!-- docfresh end -->
