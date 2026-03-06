@@ -14,7 +14,9 @@ Please don't use this in production.
 - Execute external commands and embed their output into document
 - Test external commands in document
 - Unify a template file and generated file, which improves the maintainability of document
-- Fetch document from local and remote files and embed them into document
+- Fetch documents from local and remote files and embed them into a document
+  - You can share documents across multiple files and repositories
+  - You can separate code snippets from the document and apply linters and formatters to them
 
 Note that docfresh is intended to update markdown files.
 Other markup language isn't supported.
