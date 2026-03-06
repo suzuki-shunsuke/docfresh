@@ -16,6 +16,7 @@ const (
 // parseFile parses a file and returns a list of blocks.
 func parseFile(content string) ([]*Block, error) { //nolint:cyclop
 	codeBlocks := findCodeBlockRanges(content)
+	codeBlocks = append(codeBlocks, findInlineCodeRanges(content, codeBlocks)...)
 	var blocks []*Block
 	pos := 0
 	for pos < len(content) {
@@ -195,6 +196,58 @@ func insideCodeBlock(pos int, ranges [][2]int) bool {
 		}
 	}
 	return false
+}
+
+// findClosingBackticks scans content starting at pos for a backtick run of exactly openLen.
+// Returns the end position (after the closing backticks) or -1 if not found.
+func findClosingBackticks(content string, pos, openLen int) int {
+	j := pos
+	for j < len(content) {
+		if content[j] != '`' {
+			j++
+			continue
+		}
+		closeLen := 0
+		for j+closeLen < len(content) && content[j+closeLen] == '`' {
+			closeLen++
+		}
+		if closeLen == openLen {
+			return j + closeLen
+		}
+		j += closeLen
+	}
+	return -1
+}
+
+// findInlineCodeRanges returns byte-offset ranges [start, end) for inline code spans,
+// skipping positions that are already inside fenced code block ranges.
+func findInlineCodeRanges(content string, fencedRanges [][2]int) [][2]int {
+	var ranges [][2]int
+	i := 0
+	for i < len(content) {
+		if insideCodeBlock(i, fencedRanges) {
+			i++
+			continue
+		}
+		if content[i] != '`' {
+			i++
+			continue
+		}
+		// Count the opening backtick sequence length.
+		openLen := 0
+		for i+openLen < len(content) && content[i+openLen] == '`' {
+			openLen++
+		}
+		end := findClosingBackticks(content, i+openLen, openLen)
+		if end >= 0 {
+			ranges = append(ranges, [2]int{i, end})
+			i = end
+		} else {
+			// No closing sequence found; not a code span.
+			i += openLen
+		}
+	}
+	return ranges
 }
 
 func appendText(blocks []*Block, text string) []*Block {
