@@ -12,6 +12,10 @@
 ```
 {{- end}}
 
+{{if .UseFencedCodeBlockForOutput -}}
 ```
 {{trimSuffix "\n" .CombinedOutput}}
 ```
+{{- else -}}
+{{trimSuffix "\n" .CombinedOutput}}
+{{end}}

@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"path/filepath"
 	"strings"
 	"text/template"
 
@@ -89,13 +88,24 @@ type Block struct {
 }
 
 type BlockInput struct {
-	PreCommand    *Command       `yaml:"pre_command,omitempty"`
-	PostCommand   *Command       `yaml:"post_command,omitempty"`
-	Command       *Command       `yaml:",omitempty"`
-	File          *File          `yaml:",omitempty"`
-	HTTP          *HTTP          `yaml:",omitempty"`
-	GitHubContent *GitHubContent `yaml:"github_content,omitempty"`
-	Template      *Template      `yaml:",omitempty"`
+	PreCommand                  *Command       `yaml:"pre_command,omitempty"`
+	PostCommand                 *Command       `yaml:"post_command,omitempty"`
+	Command                     *Command       `yaml:",omitempty"`
+	File                        *File          `yaml:",omitempty"`
+	HTTP                        *HTTP          `yaml:",omitempty"`
+	GitHubContent               *GitHubContent `yaml:"github_content,omitempty"`
+	Template                    *Template      `yaml:",omitempty"`
+	UseFencedCodeBlockForOutput *bool          `yaml:"use_fenced_code_block_for_output,omitempty"`
+}
+
+func (b *BlockInput) GetUseFencedCodeBlockForOutput() bool {
+	if b.UseFencedCodeBlockForOutput != nil {
+		return *b.UseFencedCodeBlockForOutput
+	}
+	if b.Command != nil {
+		return true
+	}
+	return false
 }
 
 type TemplateData struct {
@@ -171,17 +181,6 @@ type Command struct {
 	EmbedScript    bool `yaml:"embed_script,omitempty"`
 }
 
-func (c *Command) GetScriptLanguage() string {
-	if c.ScriptLanguage != "" {
-		return c.ScriptLanguage
-	}
-	switch ext := filepath.Ext(c.Script); ext {
-	case "py", "sh", "js", "hcl", "go":
-		return ext
-	}
-	return ""
-}
-
 type TemplateInput struct {
 	Type string
 	// command
@@ -207,5 +206,6 @@ type TemplateInput struct {
 	// template variables
 	Vars map[string]any
 	//
-	EmbedScript bool
+	EmbedScript                 bool
+	UseFencedCodeBlockForOutput bool
 }

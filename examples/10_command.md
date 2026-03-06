@@ -134,11 +134,7 @@ Hello
 <!-- docfresh begin
 file:
   path: ../pkg/controller/run/languages.yaml
-template:
-  content: |
-    ```yaml
-    {{trimSuffix "\n" .Content}}
-    ```
+use_fenced_code_block_for_output: true
 -->
 ```yaml
 go:
@@ -147,11 +143,20 @@ go:
     - run
   extensions:
     - .go
+hcl:
+  extensions:
+    - .hcl
 js:
   shell:
     - node
   extensions:
     - .js
+json:
+  extensions:
+    - .json
+md:
+  extensions:
+    - .md
 py:
   shell:
     - python3
@@ -163,9 +168,19 @@ sh:
   extensions:
     - .sh
     - .bash
+tf:
+  extensions:
+    - .tf
+toml:
+  extensions:
+    - .toml
 ts:
   extensions:
     - .ts
+yaml:
+  extensions:
+    - .yaml
+    - .yml
 ```
 <!-- docfresh end -->
 
