@@ -228,7 +228,7 @@ temporary
 ## command.timeout
 
 By default, there is no timeout.
-If timeout is exceeded, the signal SIGINT is sent to the proccess.
+If timeout is exceeded, the signal SIGINT is sent to the process.
 
 <!-- docfresh begin
 command:
