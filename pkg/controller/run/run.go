@@ -5,6 +5,7 @@ import (
 	_ "embed"
 	"fmt"
 	"log/slog"
+	"net/http"
 	"strings"
 	"text/template"
 
@@ -147,6 +148,7 @@ type HTTP struct {
 	TemplateData *TemplateData `yaml:"template"`
 	Test         string
 	Timeout      int
+	Header       http.Header
 }
 
 type File struct {
