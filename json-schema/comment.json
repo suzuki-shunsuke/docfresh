@@ -15,7 +15,7 @@
         },
         "command": {
           "$ref": "#/$defs/Command",
-          "description": "Execute the exernal command and embed the result to documents"
+          "description": "Execute the external command and embed the result to documents"
         },
         "file": {
           "$ref": "#/$defs/File",
@@ -49,11 +49,11 @@
         },
         "script": {
           "type": "string",
-          "description": "The file path to executed script. It's an abolute path or relative path from the current file. Either command or script is required"
+          "description": "The file path to executed script. It's an absolute path or relative path from the current file. Either command or script is required"
         },
         "dir": {
           "type": "string",
-          "description": "The directory path where commands are executed. It's an abolute path or relative path from the current file. The default value is the directory where the current file is located"
+          "description": "The directory path where commands are executed. It's an absolute path or relative path from the current file. The default value is the directory where the current file is located"
         },
         "test": {
           "type": "string",
@@ -101,7 +101,7 @@
       "properties": {
         "path": {
           "type": "string",
-          "description": "The file path. It's an abolute path or relative path from the current file."
+          "description": "The file path. It's an absolute path or relative path from the current file."
         },
         "template": {
           "$ref": "#/$defs/TemplateData",
@@ -199,7 +199,7 @@
         },
         "path": {
           "type": "string",
-          "description": "The file path. It's an abolute path or relative path from the current file."
+          "description": "The file path. It's an absolute path or relative path from the current file."
         },
         "vars": {
           "type": "object",

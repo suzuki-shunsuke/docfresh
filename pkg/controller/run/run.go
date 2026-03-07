@@ -90,7 +90,7 @@ type Block struct {
 type BlockInput struct {
 	PreCommand                  *Command       `json:"pre_command,omitempty" yaml:"pre_command" jsonschema_description:"Execute external commands before the action like command, file, http, and github_content. If it fails, docfresh fails and the action isn't run. The command and output are outputted to the console but the result isn't affected to the document. This is used for setup and checking the requirement"`
 	PostCommand                 *Command       `json:"post_command,omitempty" yaml:"post_command" jsonschema_description:"Execute external commands after the action like command, file, http, and github_content. If it fails, docfresh fails. The command and output are outputted to the console but the result isn't affected to the document. This is used for testing the action result and cleaning up. post_command is run even if pre_command and action fail."`
-	Command                     *Command       `json:"command,omitempty" jsonschema_description:"Execute the exernal command and embed the result to documents"`
+	Command                     *Command       `json:"command,omitempty" jsonschema_description:"Execute the external command and embed the result to documents"`
 	File                        *File          `json:"file,omitempty" jsonschema_description:"Read a local file and embed the content to documents"`
 	HTTP                        *HTTP          `json:"http,omitempty" jsonschema_description:"Call a HTTP request and embed the response to documents"`
 	GitHubContent               *GitHubContent `json:"github_content,omitempty" yaml:"github_content" jsonschema_description:"Fetch a file by GitHub Contents API and embed it into documents"`
@@ -159,7 +159,7 @@ type GitHubContent struct {
 
 type Template struct {
 	Content  string             `json:"content,omitempty" jsonschema_description:"The content of template"`
-	Path     string             `json:"path,omitempty" jsonschema_description:"The file path. It's an abolute path or relative path from the current file."`
+	Path     string             `json:"path,omitempty" jsonschema_description:"The file path. It's an absolute path or relative path from the current file."`
 	Template *template.Template `json:"-" yaml:"-"`
 	Vars     map[string]any     `json:"vars,omitempty" jsonschema_description:"Variables which are passed to template. They can be referred in templates as .Vars.<variable name>"`
 }
@@ -180,15 +180,15 @@ type HTTP struct {
 }
 
 type File struct {
-	Path     string        `json:"path" jsonschema_description:"The file path. It's an abolute path or relative path from the current file."`
+	Path     string        `json:"path" jsonschema_description:"The file path. It's an absolute path or relative path from the current file."`
 	Template *TemplateData `json:"template,omitempty" jsonschema_description:"If this is set, the file is rendered as template rather than plain text."`
 	Test     string        `json:"test,omitempty" jsonschema_description:"Expr script to test the file content. The evaluation result must be a boolean. If the evaluation result is false, docfresh fails"`
 }
 
 type Command struct {
 	Command        string            `json:"command,omitempty" jsonschema_description:"The content of executed script. Either command or script is required"`
-	Script         string            `json:"script,omitempty" jsonschema_description:"The file path to executed script. It's an abolute path or relative path from the current file. Either command or script is required"`
-	Dir            string            `json:"dir,omitempty" jsonschema_description:"The directory path where commands are executed. It's an abolute path or relative path from the current file. The default value is the directory where the current file is located"`
+	Script         string            `json:"script,omitempty" jsonschema_description:"The file path to executed script. It's an absolute path or relative path from the current file. Either command or script is required"`
+	Dir            string            `json:"dir,omitempty" jsonschema_description:"The directory path where commands are executed. It's an absolute path or relative path from the current file. The default value is the directory where the current file is located"`
 	Test           string            `json:"test,omitempty" jsonschema_description:"Expr script to test the result of command. The evaluation result must be a boolean. If the evaluation result is false, docfresh fails"`
 	ScriptLanguage string            `json:"script_language,omitempty" yaml:"script_language" jsonschema_description:"Language of script. This is used for markdown's fenced code block. This is automatically detected in some languages such as Go and Python"`
 	Timeout        int               `json:"timeout,omitempty" jsonschema_description:"The timeout of command. By default, there is no timeout. If timeout is exceeded, the signal SIGINT is sent to the process."`
