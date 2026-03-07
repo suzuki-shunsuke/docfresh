@@ -14,8 +14,6 @@ There are some ways to install docfresh.
 
 You can install docfresh using [Homebrew](https://brew.sh/).
 
-[Homebrew Core Formula: docfresh](https://formulae.brew.sh/formula/docfresh)
-
 ```sh
 brew install suzuki-shunsuke/docfresh/docfresh
 ```
@@ -107,13 +105,11 @@ gh release download "$version" \
   -R suzuki-shunsuke/docfresh \
   -p "$asset" \
   -p "$checksum_file" \
-  -p "${checksum_file}.pem" \
-  -p "${checksum_file}.sig"
+  -p "${checksum_file}.bundle"
 cosign verify-blob \
-  --signature "${checksum_file}.sig" \
-  --certificate "${checksum_file}.pem" \
+  "$checksum_file" \
+  --bundle "${checksum_file}.bundle" \
   --certificate-identity-regexp 'https://github\.com/suzuki-shunsuke/go-release-workflow/\.github/workflows/release\.yaml@.*' \
-  --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
-  "$checksum_file"
-cat "$checksum_file" | sha256sum -c --ignore-missing
+  --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
+cat "$checksum_file" | sha256sum -c --ignore-missing -
 ```
