@@ -1,6 +1,6 @@
 # docfresh
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/suzuki-shunsuke/docfresh)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/suzuki-shunsuke/docfresh) | [Install](INSTALL.md)
 
 docfresh is a CLI making document with command and code snippet maintainable, reusable, and testable.
 It prevents document from being outdated.
@@ -19,7 +19,7 @@ Other markup language isn't supported.
 
 ## Getting Started
 
-1. [Install docfresh](#install)
+1. [Install docfresh](INSTALL.md)
 
 ```sh
 : Check version
@@ -109,9 +109,7 @@ https://github.com/suzuki-shunsuke/docfresh/blob/8df6bbf991279c8d8fafa99b5acc4b2
 
 ## Install
 
-```sh
-go install github.com/suzuki-shunsuke/docfresh/cmd/docfresh@latest
-```
+[Please see INSTALL.md.](INSTALL.md)
 
 ## Security
 
