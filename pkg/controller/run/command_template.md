@@ -13,6 +13,8 @@
 {{- end}}
 
 {{if .UseFencedCodeBlockForOutput -}}
+Output:
+
 ```
 {{trimSuffix "\n" .CombinedOutput}}
 ```
