@@ -5,12 +5,6 @@
 docfresh is a CLI making document with command and code snippet maintainable, reusable, and testable.
 It prevents document from being outdated.
 
-## Status
-
-This is still alpha.
-Many features are not implemented yet, and the API is subject to change.
-Please don't use this in production.
-
 ## Features
 
 - Execute external commands and embed their output into document
