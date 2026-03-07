@@ -10,6 +10,8 @@ command:
 echo hello
 ```
 
+Output:
+
 ```
 hello
 ```
@@ -25,6 +27,8 @@ command:
 ```sh
 cat foo.md
 ```
+
+Output:
 
 ```
 This is read from foo.md
@@ -42,6 +46,8 @@ command:
 ```sh
 echo "$FOO"
 ```
+
+Output:
 
 ```
 foo
@@ -89,6 +95,8 @@ command:
 ```sh
 bash file/hello.sh
 ```
+
+Output:
 
 ```
 Hello
@@ -201,6 +209,8 @@ echo "failed to install" >&2
 exit 1
 ```
 
+Output:
+
 ```
 failed to install
 ```
@@ -219,6 +229,8 @@ post_command:
 ```sh
 cat temporary.txt
 ```
+
+Output:
 
 ```
 temporary
@@ -256,6 +268,8 @@ setTimeout(() => {
   console.log("Completed");
 }, 1000 * 10);
 ```
+
+Output:
 
 ```
 Start

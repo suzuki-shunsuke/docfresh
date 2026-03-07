@@ -20,6 +20,8 @@ post_command:
 echo hello
 ```
 
+Output:
+
 ```
 hello
 ```
