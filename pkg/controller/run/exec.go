@@ -59,7 +59,7 @@ func execContainerCommand(ctx context.Context, frc *container.FileRunContext, co
 
 func execResultToTemplateInput(r *container.ExecResult) *TemplateInput {
 	return &TemplateInput{
-		Type:           "command",
+		Type:           srcCommand,
 		Command:        r.Command,
 		Stdout:         r.Stdout,
 		Stderr:         r.Stderr,
@@ -92,7 +92,7 @@ func execContainerFile(ctx context.Context, frc *container.FileRunContext, file 
 		return nil, fmt.Errorf("extract range from file: %w", err)
 	}
 	result := &TemplateInput{
-		Type:     "container-file",
+		Type:     srcContainerFile,
 		Path:     file.Path,
 		Language: sl,
 		Content:  content,

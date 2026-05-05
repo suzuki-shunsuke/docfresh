@@ -69,7 +69,7 @@ func ValidateInput(input *Input, existing map[string]*State) error {
 	if input.Engine == "" {
 		return errors.New("container engine is required")
 	}
-	if input.Engine != "docker-cli" {
+	if input.Engine != containerDockerCLI {
 		return fmt.Errorf("unsupported container engine: %s (only 'docker-cli' is supported)", input.Engine)
 	}
 	if input.Image == "" {
@@ -83,7 +83,7 @@ func ValidateInput(input *Input, existing map[string]*State) error {
 
 func NewEngine(engine string) (Engine, error) {
 	switch engine {
-	case "docker-cli":
+	case containerDockerCLI:
 		return &DockerCLIEngine{}, nil
 	default:
 		return nil, fmt.Errorf("unsupported container engine: %s", engine)

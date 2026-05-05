@@ -22,7 +22,7 @@ func getGitHubContent(ctx context.Context, gh GitHub, langs map[string]*Language
 		}
 	}
 	return &TemplateInput{
-		Type:     "github-content",
+		Type:     srcGitHubContent,
 		Content:  s,
 		Owner:    content.Owner,
 		Repo:     content.Repo,

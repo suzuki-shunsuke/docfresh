@@ -61,10 +61,10 @@ func getShell(command *Command, langs map[string]*Language, langsByName map[stri
 		return shell, nil
 	}
 	if command.Script == "" {
-		return []string{"bash", "-c"}, nil
+		return []string{cmdBash, "-c"}, nil
 	}
 	if !command.EmbedScript {
-		return []string{"bash"}, nil
+		return []string{cmdBash}, nil
 	}
 	ext := filepath.Ext(command.Script)
 	sl, ok := langs[ext]
@@ -119,7 +119,7 @@ func (c *Controller) execCommand(ctx context.Context, logger *slog.Logger, file 
 		return nil, fmt.Errorf("execute a command: %w", err)
 	}
 	return &TemplateInput{
-		Type:            "command",
+		Type:            srcCommand,
 		Shell:           shell,
 		Command:         command.Command,
 		Script:          command.Script,

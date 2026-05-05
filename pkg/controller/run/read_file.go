@@ -27,7 +27,7 @@ func readFile(baseFile string, file *File, fs afero.Fs, langs map[string]*Langua
 	}
 
 	result := &TemplateInput{
-		Type:     "local-file",
+		Type:     srcLocalFile,
 		Path:     file.Path,
 		Language: sl,
 		Content:  content,

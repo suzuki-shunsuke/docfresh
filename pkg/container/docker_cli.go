@@ -29,7 +29,7 @@ func (d *DockerCLIEngine) Create(ctx context.Context, input *Input, file string)
 }
 
 func BuildDockerCreateArgs(input *Input, file string) []string {
-	args := []string{"run", "-d", "--entrypoint="}
+	args := []string{cmdRun, "-d", flagEntrypoint}
 	if input.Workspace != "" {
 		args = append(args, "--workdir="+input.Workspace)
 	}
@@ -97,7 +97,7 @@ func (d *DockerCLIEngine) Exec(ctx context.Context, containerID string, command 
 }
 
 func BuildDockerExecArgs(containerID, command, dir string, env map[string]string) []string {
-	args := []string{"exec"}
+	args := []string{cmdExec}
 	if dir != "" {
 		args = append(args, "-w", dir)
 	}
@@ -109,7 +109,7 @@ func BuildDockerExecArgs(containerID, command, dir string, env map[string]string
 }
 
 func (d *DockerCLIEngine) ReadFile(ctx context.Context, containerID string, path string, dir string) ([]byte, error) {
-	args := []string{"exec"}
+	args := []string{cmdExec}
 	if dir != "" {
 		args = append(args, "-w", dir)
 	}

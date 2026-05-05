@@ -76,9 +76,9 @@ func appendEndComment(content, s, endComment string) string {
 
 func render(tpl *Template, result *TemplateInput) (string, error) {
 	switch result.Type {
-	case "local-file", "http", "github-content", "container-file":
+	case srcLocalFile, srcHTTP, srcGitHubContent, srcContainerFile:
 		return renderFile(tpl, result)
-	case "command":
+	case srcCommand:
 		result.Vars = tpl.Vars
 		return execTpl(tpl.Template, result)
 	default:
@@ -113,28 +113,28 @@ func renderFile(tpl *Template, result *TemplateInput) (string, error) {
 
 func defaultDetailsTagSummary(result *TemplateInput) string {
 	switch result.Type {
-	case "command":
-		return "Output"
-	case "local-file", "container-file":
+	case srcCommand:
+		return keyOutput
+	case srcLocalFile, srcContainerFile:
 		return result.Path
-	case "http":
+	case srcHTTP:
 		return result.URL
-	case "github-content":
+	case srcGitHubContent:
 		s := result.Owner + "/" + result.Repo + "/" + result.Path
 		if result.Ref != "" {
 			s += "@" + result.Ref
 		}
 		return s
 	default:
-		return "Output"
+		return keyOutput
 	}
 }
 
 func codeFence(content string) string {
-	if strings.Contains(content, "```") {
-		return "````"
+	if strings.Contains(content, codeFenceTriple) {
+		return codeFenceQuad
 	}
-	return "```"
+	return codeFenceTriple
 }
 
 func wrapDetailsTag(content, summary string) string {
