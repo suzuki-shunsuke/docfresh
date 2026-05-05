@@ -46,7 +46,7 @@ func callHTTP(ctx context.Context, h *HTTP, httpClient *http.Client, langs map[s
 		sl = languageFromURL(h.URL, langs)
 	}
 	if sl == "" && json.Valid(b) {
-		sl = "json"
+		sl = formatJSON
 	}
 
 	content := string(b)
@@ -55,7 +55,7 @@ func callHTTP(ctx context.Context, h *HTTP, httpClient *http.Client, langs map[s
 		return nil, fmt.Errorf("extract range from http response: %w", err)
 	}
 	result := &TemplateInput{
-		Type:     "http",
+		Type:     srcHTTP,
 		URL:      h.URL,
 		Content:  string(b),
 		Language: sl,

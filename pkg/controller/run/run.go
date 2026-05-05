@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"slices"
 	"strings"
 	"text/template"
 
@@ -78,9 +79,9 @@ func (c *Controller) run(ctx context.Context, logger *slog.Logger, tpls *Templat
 
 	var postBlocks []*Block
 	defer func() {
-		for i := len(postBlocks) - 1; i >= 0; i-- {
-			logger := logger.With("line_number", postBlocks[i].LineNumber)
-			if err := c.runPostBlock(ctx, logger, tpls, file, postBlocks[i]); err != nil {
+		for _, v := range slices.Backward(postBlocks) {
+			logger := logger.With("line_number", v.LineNumber)
+			if err := c.runPostBlock(ctx, logger, tpls, file, v); err != nil {
 				if gErr == nil {
 					gErr = err
 				} else {
