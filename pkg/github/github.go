@@ -8,7 +8,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/google/go-github/v86/github"
+	"github.com/google/go-github/v87/github"
 	"github.com/suzuki-shunsuke/ghtkn-go-sdk/ghtkn"
 	"golang.org/x/oauth2"
 )
@@ -25,11 +25,14 @@ type (
 	RepositoryContentGetOptions = github.RepositoryContentGetOptions
 )
 
-func New(ctx context.Context, logger *slog.Logger, token string, ghtknEnabled bool) *Client {
-	gh := github.NewClient(getHTTPClient(ctx, logger, token, ghtknEnabled))
+func New(ctx context.Context, logger *slog.Logger, token string, ghtknEnabled bool) (*Client, error) {
+	gh, err := github.NewClient(github.WithHTTPClient(getHTTPClient(ctx, logger, token, ghtknEnabled)))
+	if err != nil {
+		return nil, fmt.Errorf("create a GitHub client: %w", err)
+	}
 	return &Client{
 		repo: gh.Repositories,
-	}
+	}, nil
 }
 
 func getHTTPClient(ctx context.Context, logger *slog.Logger, token string, ghtknEnabled bool) *http.Client {
