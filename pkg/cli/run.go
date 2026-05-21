@@ -58,7 +58,10 @@ func runAction(ctx context.Context, logger *slogutil.Logger, args *RunArgs) erro
 	if err != nil {
 		return fmt.Errorf("check if ghtkn integration is enabled: %w", err)
 	}
-	gh := github.New(ctx, logger.Logger, github.GetGitHubTokenFromEnv(), ghtknEnabled)
+	gh, err := github.New(ctx, logger.Logger, github.GetGitHubTokenFromEnv(), ghtknEnabled)
+	if err != nil {
+		return fmt.Errorf("create a GitHub client: %w", err)
+	}
 	ctrl, err := run.New(fs, gh)
 	if err != nil {
 		return fmt.Errorf("initialize a controller: %w", err)
