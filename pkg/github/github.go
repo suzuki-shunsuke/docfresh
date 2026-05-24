@@ -8,7 +8,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/google/go-github/v87/github"
+	"github.com/google/go-github/v88/github"
 	"github.com/suzuki-shunsuke/ghtkn-go-sdk/ghtkn"
 	"golang.org/x/oauth2"
 )
