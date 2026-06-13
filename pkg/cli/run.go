@@ -54,11 +54,7 @@ func runAction(ctx context.Context, logger *slogutil.Logger, args *RunArgs) erro
 	}
 
 	fs := afero.NewOsFs()
-	ghtknEnabled, err := github.GetGHTKNEnabledFromEnv()
-	if err != nil {
-		return fmt.Errorf("check if ghtkn integration is enabled: %w", err)
-	}
-	gh, err := github.New(ctx, logger.Logger, github.GetGitHubTokenFromEnv(), ghtknEnabled)
+	gh, err := github.New(ctx, logger.Logger, github.GetGitHubTokenFromEnv())
 	if err != nil {
 		return fmt.Errorf("create a GitHub client: %w", err)
 	}

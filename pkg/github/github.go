@@ -6,7 +6,6 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
-	"strconv"
 
 	"github.com/google/go-github/v88/github"
 	"github.com/suzuki-shunsuke/ghtkn-go-sdk/ghtkn"
@@ -25,8 +24,12 @@ type (
 	RepositoryContentGetOptions = github.RepositoryContentGetOptions
 )
 
-func New(ctx context.Context, logger *slog.Logger, token string, ghtknEnabled bool) (*Client, error) {
-	gh, err := github.NewClient(github.WithHTTPClient(getHTTPClient(ctx, logger, token, ghtknEnabled)))
+func New(ctx context.Context, logger *slog.Logger, token string) (*Client, error) {
+	hc, err := getHTTPClient(ctx, logger, token)
+	if err != nil {
+		return nil, fmt.Errorf("get HTTP client: %w", err)
+	}
+	gh, err := github.NewClient(github.WithHTTPClient(hc))
 	if err != nil {
 		return nil, fmt.Errorf("create a GitHub client: %w", err)
 	}
@@ -35,24 +38,37 @@ func New(ctx context.Context, logger *slog.Logger, token string, ghtknEnabled bo
 	}, nil
 }
 
-func getHTTPClient(ctx context.Context, logger *slog.Logger, token string, ghtknEnabled bool) *http.Client {
-	ts := getTokenSource(logger, token, ghtknEnabled)
-	if ts == nil {
-		return http.DefaultClient
+func getHTTPClient(ctx context.Context, logger *slog.Logger, token string) (*http.Client, error) {
+	ts, err := getTokenSource(logger, token)
+	if err != nil {
+		return nil, fmt.Errorf("get token source: %w", err)
 	}
-	return oauth2.NewClient(ctx, ts)
+	if ts == nil {
+		return http.DefaultClient, nil
+	}
+	return oauth2.NewClient(ctx, ts), nil
 }
 
-func getTokenSource(logger *slog.Logger, token string, ghtknEnabled bool) oauth2.TokenSource {
+func getTokenSource(logger *slog.Logger, token string) (oauth2.TokenSource, error) {
 	if token != "" {
 		return oauth2.StaticTokenSource(
 			&oauth2.Token{AccessToken: token},
-		)
+		), nil
 	}
-	if ghtknEnabled {
-		return ghtkn.New().TokenSource(logger, &ghtkn.InputGet{})
+	ghtknEnabled, err := ghtkn.Enabled(&ghtkn.InputEnabled{
+		Envs: []string{"DOCFRESH_GHTKN_ENABLED"},
+	})
+	if err != nil {
+		return nil, fmt.Errorf("check if ghtkn is enabled: %w", err)
 	}
-	return nil
+	if !ghtknEnabled {
+		return nil, nil //nolint:nilnil
+	}
+	client, err := ghtkn.New()
+	if err != nil {
+		return nil, fmt.Errorf("create a ghtkn client: %w", err)
+	}
+	return client.TokenSource(logger, &ghtkn.InputGet{}), nil
 }
 
 func GetGitHubTokenFromEnv() string {
@@ -63,16 +79,4 @@ func GetGitHubTokenFromEnv() string {
 		}
 	}
 	return ""
-}
-
-func GetGHTKNEnabledFromEnv() (bool, error) {
-	s := os.Getenv("DOCFRESH_GHTKN_ENABLED")
-	if s == "" {
-		return false, nil
-	}
-	b, err := strconv.ParseBool(s)
-	if err != nil {
-		return false, fmt.Errorf("parse the environment variable as a boolean: %w", err)
-	}
-	return b, nil
 }
