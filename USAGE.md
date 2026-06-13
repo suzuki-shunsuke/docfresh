@@ -14,7 +14,7 @@ USAGE:
    docfresh [global options] [command [command options]]
 
 VERSION:
-   0.2.0
+   0.3.0
 
 COMMANDS:
    run         Update documents
@@ -37,7 +37,7 @@ NAME:
    docfresh run - Update documents
 
 USAGE:
-   docfresh run [arguments...]
+   docfresh run [options] [document file ...] 
 
 OPTIONS:
    --allow-unknown-field  Allow unknown fields in directive YAML
@@ -52,7 +52,7 @@ NAME:
    docfresh validate - Validate documents
 
 USAGE:
-   docfresh validate [arguments...]
+   docfresh validate [options] [document file ...] 
 
 OPTIONS:
    --allow-unknown-field  Downgrade unknown field errors to warnings
@@ -67,7 +67,7 @@ NAME:
    docfresh version - Show version
 
 USAGE:
-   docfresh version
+   docfresh version [options]
 
 OPTIONS:
    --json, -j  Output version in JSON format
@@ -82,7 +82,7 @@ NAME:
    docfresh completion - Output shell completion script for bash, zsh, fish, or Powershell
 
 USAGE:
-   docfresh completion
+   docfresh completion [options]
 
 DESCRIPTION:
    Output shell completion script for bash, zsh, fish, or Powershell.
