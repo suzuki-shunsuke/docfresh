@@ -14,7 +14,7 @@ USAGE:
    docfresh [global options] [command [command options]]
 
 VERSION:
-   0.3.0
+   0.3.1
 
 COMMANDS:
    run         Update documents
@@ -82,7 +82,7 @@ NAME:
    docfresh completion - Output shell completion script for bash, zsh, fish, or Powershell
 
 USAGE:
-   docfresh completion [options]
+   docfresh completion [command [command options]]
 
 DESCRIPTION:
    Output shell completion script for bash, zsh, fish, or Powershell.
@@ -100,6 +100,68 @@ DESCRIPTION:
    # Powershell
    Output the script to path/to/autocomplete/docfresh.ps1 an run it.
 
+
+COMMANDS:
+   bash  Output bash completion script
+   zsh   Output zsh completion script
+   fish  Output fish completion script
+   pwsh  Output pwsh completion script
+
+OPTIONS:
+   --help, -h  show help
+```
+
+### completion bash
+
+```console
+$ completion bash --help
+NAME:
+   docfresh completion bash - Output bash completion script
+
+USAGE:
+   docfresh completion bash [options]
+
+OPTIONS:
+   --help, -h  show help
+```
+
+### completion zsh
+
+```console
+$ completion zsh --help
+NAME:
+   docfresh completion zsh - Output zsh completion script
+
+USAGE:
+   docfresh completion zsh [options]
+
+OPTIONS:
+   --help, -h  show help
+```
+
+### completion fish
+
+```console
+$ completion fish --help
+NAME:
+   docfresh completion fish - Output fish completion script
+
+USAGE:
+   docfresh completion fish [options]
+
+OPTIONS:
+   --help, -h  show help
+```
+
+### completion pwsh
+
+```console
+$ completion pwsh --help
+NAME:
+   docfresh completion pwsh - Output pwsh completion script
+
+USAGE:
+   docfresh completion pwsh [options]
 
 OPTIONS:
    --help, -h  show help
