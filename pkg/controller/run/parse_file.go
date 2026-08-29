@@ -76,8 +76,7 @@ func ParseFile(content string, opt *ParseOption) ([]*Block, error) { //nolint:cy
 		if containerIdx != -1 && (beginIdx == -1 || containerIdx < beginIdx) && (endIdx == -1 || containerIdx < endIdx) && (postIdx == -1 || containerIdx < postIdx) {
 			block, newPos, err := parseContainerBlock(content, pos, containerIdx, opt)
 			if err != nil {
-				var yamlErr *YAMLError
-				if errors.As(err, &yamlErr) {
+				if yamlErr, ok := errors.AsType[*YAMLError](err); ok {
 					yamlErr.DirectiveLine = lineNumber(content, pos+containerIdx)
 				}
 				return nil, err
@@ -95,8 +94,7 @@ func ParseFile(content string, opt *ParseOption) ([]*Block, error) { //nolint:cy
 		if postIdx != -1 && (beginIdx == -1 || postIdx < beginIdx) && (endIdx == -1 || postIdx < endIdx) {
 			block, newPos, err := parsePostBlock(content, pos, postIdx, opt)
 			if err != nil {
-				var yamlErr *YAMLError
-				if errors.As(err, &yamlErr) {
+				if yamlErr, ok := errors.AsType[*YAMLError](err); ok {
 					yamlErr.DirectiveLine = lineNumber(content, pos+postIdx)
 				}
 				return nil, err
@@ -134,8 +132,7 @@ func ParseFile(content string, opt *ParseOption) ([]*Block, error) { //nolint:cy
 		yamlStr = strings.TrimSpace(yamlStr)
 		var input BlockInput
 		if err := unmarshalYAML(yamlStr, &input, opt); err != nil {
-			var yamlErr *YAMLError
-			if errors.As(err, &yamlErr) {
+			if yamlErr, ok := errors.AsType[*YAMLError](err); ok {
 				yamlErr.DirectiveLine = lineNumber(content, beginStart)
 			}
 			return nil, fmt.Errorf("failed to parse YAML in begin comment: %w", err)

@@ -61,8 +61,7 @@ func (c *Controller) run(ctx context.Context, logger *slog.Logger, tpls *Templat
 	}
 	blocks, err := ParseFile(string(b), parseOpt)
 	if err != nil {
-		var yamlErr *YAMLError
-		if errors.As(err, &yamlErr) {
+		if yamlErr, ok := errors.AsType[*YAMLError](err); ok {
 			fmt.Fprintf(c.stderr, "%s:%d\n", file, yamlErr.DirectiveLine)
 			fmt.Fprintln(c.stderr, yamlErr)
 			return errors.New("parse file failed")
