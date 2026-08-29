@@ -50,8 +50,7 @@ func (c *Controller) validateFile(logger *slog.Logger, file string, allowUnknown
 		return nil
 	}
 	if !allowUnknownField {
-		var yamlErr *run.YAMLError
-		if errors.As(err, &yamlErr) {
+		if yamlErr, ok := errors.AsType[*run.YAMLError](err); ok {
 			fmt.Fprintf(c.stderr, "%s:%d\n", file, yamlErr.DirectiveLine)
 			fmt.Fprintln(c.stderr, yamlErr)
 			return errors.New("parse file failed")
@@ -61,8 +60,7 @@ func (c *Controller) validateFile(logger *slog.Logger, file string, allowUnknown
 	// Try normal parse to see if the error was about unknown fields.
 	if _, normalErr := run.ParseFile(content, nil); normalErr != nil {
 		// Normal parse also fails — real YAML error.
-		var yamlErr *run.YAMLError
-		if errors.As(err, &yamlErr) {
+		if yamlErr, ok := errors.AsType[*run.YAMLError](err); ok {
 			fmt.Fprintf(c.stderr, "%s:%d\n", file, yamlErr.DirectiveLine)
 			fmt.Fprintln(c.stderr, yamlErr)
 			return errors.New("parse file failed")
@@ -70,8 +68,7 @@ func (c *Controller) validateFile(logger *slog.Logger, file string, allowUnknown
 		return fmt.Errorf("parse file: %w", err)
 	}
 	// Normal parse succeeded — the error was about unknown fields.
-	var yamlErr *run.YAMLError
-	if errors.As(err, &yamlErr) {
+	if yamlErr, ok := errors.AsType[*run.YAMLError](err); ok {
 		fmt.Fprintf(c.stderr, "%s:%d\n", file, yamlErr.DirectiveLine)
 		fmt.Fprintln(c.stderr, yamlErr)
 	} else {
