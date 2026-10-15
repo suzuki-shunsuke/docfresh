@@ -15,7 +15,7 @@ jobs:
       - uses: aquaproj/aqua-installer@82d0e83878a8657c4a6f2ff1755d3bfbfc67f329 # v4.1.0
         with:
           aqua_version: v2.64.0
-      - uses: suzuki-shunsuke/go-autofix-action@9a8682f2dc2a935fe2a2ac96deb03de2dfcb872e # v0.1.13
+      - uses: suzuki-shunsuke/go-autofix-action@2c7f494d0149fe60c0adc9feb09b6b995bae00ec # v0.2.0
         with:
           aqua_version: v2.64.0
           takumi_guard_bot_id: ${{secrets.TAKUMI_GUARD_BOT_ID}}
