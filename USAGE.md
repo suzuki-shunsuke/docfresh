@@ -14,7 +14,7 @@ USAGE:
    docfresh [global options] [command [command options]]
 
 VERSION:
-   0.3.1
+   0.3.2
 
 COMMANDS:
    run         Update documents
@@ -98,7 +98,7 @@ DESCRIPTION:
    docfresh completion fish > ~/.config/fish/completions/docfresh.fish
 
    # Powershell
-   Output the script to path/to/autocomplete/docfresh.ps1 an run it.
+   Output the script to path/to/autocomplete/docfresh.ps1 and run it.
 
 
 COMMANDS:
