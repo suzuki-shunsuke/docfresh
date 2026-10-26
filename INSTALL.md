@@ -51,8 +51,9 @@ Please unarchive it and install a pre built binary into `$PATH`.
 You can verify downloaded assets using some tools.
 
 1. [GitHub CLI](https://cli.github.com/)
-1. [slsa-verifier](https://github.com/slsa-framework/slsa-verifier)
 1. [Cosign](https://github.com/sigstore/cosign)
+1. [Packslip](https://packslip.dev/) `docfresh >= v0.3.2`
+1. [slsa-verifier](https://github.com/slsa-framework/slsa-verifier) `docfresh <= v0.3.1`
 
 ### 1. GitHub CLI
 
@@ -63,7 +64,7 @@ aqua g -i cli/cli
 ```
 
 ```sh
-version=v0.0.1
+version=v0.3.2
 asset=docfresh_darwin_arm64.tar.gz
 gh release download -R suzuki-shunsuke/docfresh "$version" -p "$asset"
 gh attestation verify "$asset" \
@@ -71,34 +72,38 @@ gh attestation verify "$asset" \
   --signer-workflow suzuki-shunsuke/go-release-workflow/.github/workflows/release.yaml
 ```
 
-### 2. slsa-verifier
-
-You can install slsa-verifier by aqua.
-
-```sh
-aqua g -i slsa-framework/slsa-verifier
-```
-
-```sh
-version=v0.0.1
-asset=docfresh_darwin_arm64.tar.gz
-gh release download -R suzuki-shunsuke/docfresh "$version" -p "$asset" -p multiple.intoto.jsonl
-slsa-verifier verify-artifact "$asset" \
-  --provenance-path multiple.intoto.jsonl \
-  --source-uri github.com/suzuki-shunsuke/docfresh \
-  --source-tag "$version"
-```
-
-### 3. Cosign
+### 2. Cosign
 
 You can install Cosign by aqua.
+Cosign v2.4.2 or later is required.
 
 ```sh
 aqua g -i sigstore/cosign
 ```
 
+From docfresh v0.3.0, the bundle file is `docfresh_checksums.txt.sigstore.json`.
+
 ```sh
-version=v0.0.1
+version=v0.3.2
+checksum_file="docfresh_checksums.txt"
+asset=docfresh_darwin_arm64.tar.gz
+gh release download "$version" \
+  -R suzuki-shunsuke/docfresh \
+  -p "$asset" \
+  -p "$checksum_file" \
+  -p "${checksum_file}.sigstore.json"
+cosign verify-blob \
+  "$checksum_file" \
+  --bundle "${checksum_file}.sigstore.json" \
+  --certificate-identity-regexp 'https://github\.com/suzuki-shunsuke/go-release-workflow/\.github/workflows/release\.yaml@.*' \
+  --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
+cat "$checksum_file" | sha256sum -c --ignore-missing -
+```
+
+For docfresh v0.2.0 or older, the bundle file is `docfresh_checksums.txt.bundle`.
+
+```sh
+version=v0.2.0
 checksum_file="docfresh_checksums.txt"
 asset=docfresh_darwin_arm64.tar.gz
 gh release download "$version" \
@@ -112,4 +117,51 @@ cosign verify-blob \
   --certificate-identity-regexp 'https://github\.com/suzuki-shunsuke/go-release-workflow/\.github/workflows/release\.yaml@.*' \
   --certificate-oidc-issuer "https://token.actions.githubusercontent.com"
 cat "$checksum_file" | sha256sum -c --ignore-missing -
+```
+
+### 3. Packslip
+
+`docfresh >= v0.3.2`
+
+You can install packslip by aqua.
+
+```sh
+aqua g -i jdx/packslip
+```
+
+```sh
+version=v0.3.2
+asset=docfresh_darwin_arm64.tar.gz
+gh release download -R suzuki-shunsuke/docfresh "$version" -p "$asset" -p packslip.sigstore.json
+packslip verify packslip.sigstore.json \
+    --pin ps1_cxrqjcfqmusm4jcdegio6n7uq4 \
+    --identity-prefix https://github.com/suzuki-shunsuke/go-release-workflow/.github/workflows/release.yaml@ \
+    --artifact "$asset"
+```
+
+- `--pin` requires the release to be signed from the repository `suzuki-shunsuke/docfresh`, identified by its repository ID rather than its name
+- `--identity-prefix` requires the release to be signed by the release workflow of [suzuki-shunsuke/go-release-workflow](https://github.com/suzuki-shunsuke/go-release-workflow)
+
+On success, packslip prints a line starting with `ok:`.
+Please make sure it shows the project and version you meant, e.g. `github.com/suzuki-shunsuke/docfresh 0.3.2`.
+
+### 4. slsa-verifier
+
+> [!WARNING]
+> As of docfresh v0.3.2, `multiple.intoto.jsonl` hasn't been published anymore.
+
+You can install slsa-verifier by aqua.
+
+```sh
+aqua g -i slsa-framework/slsa-verifier
+```
+
+```sh
+version=v0.3.1
+asset=docfresh_darwin_arm64.tar.gz
+gh release download -R suzuki-shunsuke/docfresh "$version" -p "$asset" -p multiple.intoto.jsonl
+slsa-verifier verify-artifact "$asset" \
+  --provenance-path multiple.intoto.jsonl \
+  --source-uri github.com/suzuki-shunsuke/docfresh \
+  --source-tag "$version"
 ```
